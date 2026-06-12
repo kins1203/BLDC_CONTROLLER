@@ -1,0 +1,361 @@
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"svpwm.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/svpwm.c"
+  20              		.section	.text.SVPWM_Init,"ax",%progbits
+  21              		.align	1
+  22              		.global	SVPWM_Init
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	SVPWM_Init:
+  28              	.LVL0:
+  29              	.LFB0:
+   1:Core/Src/svpwm.c **** #include "svpwm.h"
+   2:Core/Src/svpwm.c **** #include <math.h>
+   3:Core/Src/svpwm.c **** 
+   4:Core/Src/svpwm.c **** /* ================= INIT ================= */
+   5:Core/Src/svpwm.c **** 
+   6:Core/Src/svpwm.c **** void SVPWM_Init(SVPWM_Handle_t *hsvpwm, float Udc, float pwm_period)
+   7:Core/Src/svpwm.c **** {
+  30              		.loc 1 7 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+   8:Core/Src/svpwm.c ****     hsvpwm->Udc = Udc;
+  35              		.loc 1 8 5 view .LVU1
+  36              		.loc 1 8 17 is_stmt 0 view .LVU2
+  37 0000 80ED000A 		vstr.32	s0, [r0]
+   9:Core/Src/svpwm.c ****     hsvpwm->pwm_period = pwm_period;
+  38              		.loc 1 9 5 is_stmt 1 view .LVU3
+  39              		.loc 1 9 24 is_stmt 0 view .LVU4
+  40 0004 C0ED010A 		vstr.32	s1, [r0, #4]
+  10:Core/Src/svpwm.c **** }
+  41              		.loc 1 10 1 view .LVU5
+  42 0008 7047     		bx	lr
+  43              		.cfi_endproc
+  44              	.LFE0:
+  46              		.section	.text.SVPWM_Compute,"ax",%progbits
+  47              		.align	1
+  48              		.global	SVPWM_Compute
+  49              		.syntax unified
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s 			page 2
+
+
+  50              		.thumb
+  51              		.thumb_func
+  53              	SVPWM_Compute:
+  54              	.LVL1:
+  55              	.LFB1:
+  11:Core/Src/svpwm.c **** 
+  12:Core/Src/svpwm.c **** /* ================= CORE ================= */
+  13:Core/Src/svpwm.c **** 
+  14:Core/Src/svpwm.c **** void SVPWM_Compute(
+  15:Core/Src/svpwm.c ****     SVPWM_Handle_t *hsvpwm,
+  16:Core/Src/svpwm.c ****     float Ualpha,
+  17:Core/Src/svpwm.c ****     float Ubeta,
+  18:Core/Src/svpwm.c ****     float *dutyA,
+  19:Core/Src/svpwm.c ****     float *dutyB,
+  20:Core/Src/svpwm.c ****     float *dutyC
+  21:Core/Src/svpwm.c **** )
+  22:Core/Src/svpwm.c **** {
+  56              		.loc 1 22 1 is_stmt 1 view -0
+  57              		.cfi_startproc
+  58              		@ args = 0, pretend = 0, frame = 0
+  59              		@ frame_needed = 0, uses_anonymous_args = 0
+  60              		.loc 1 22 1 is_stmt 0 view .LVU7
+  61 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  62              	.LCFI0:
+  63              		.cfi_def_cfa_offset 24
+  64              		.cfi_offset 3, -24
+  65              		.cfi_offset 4, -20
+  66              		.cfi_offset 5, -16
+  67              		.cfi_offset 6, -12
+  68              		.cfi_offset 7, -8
+  69              		.cfi_offset 14, -4
+  70 0002 2DED048B 		vpush.64	{d8, d9}
+  71              	.LCFI1:
+  72              		.cfi_def_cfa_offset 40
+  73              		.cfi_offset 80, -40
+  74              		.cfi_offset 81, -36
+  75              		.cfi_offset 82, -32
+  76              		.cfi_offset 83, -28
+  77 0006 0746     		mov	r7, r0
+  78 0008 B0EE409A 		vmov.f32	s18, s0
+  79 000c 0E46     		mov	r6, r1
+  80 000e 1546     		mov	r5, r2
+  81 0010 1C46     		mov	r4, r3
+  23:Core/Src/svpwm.c ****     /* 1. Tính điện áp 3 pha từ alpha-beta */
+  24:Core/Src/svpwm.c ****     float Ua = Ualpha;
+  82              		.loc 1 24 5 is_stmt 1 view .LVU8
+  83              	.LVL2:
+  25:Core/Src/svpwm.c ****     float Ub = -0.5f * Ualpha + 0.8660254f * Ubeta;
+  84              		.loc 1 25 5 view .LVU9
+  85              		.loc 1 25 22 is_stmt 0 view .LVU10
+  86 0012 BEEE008A 		vmov.f32	s16, #-5.0e-1
+  87 0016 20EE088A 		vmul.f32	s16, s0, s16
+  88              		.loc 1 25 44 view .LVU11
+  89 001a DFED417A 		vldr.32	s15, .L25
+  90 001e 60EEA70A 		vmul.f32	s1, s1, s15
+  91              	.LVL3:
+  92              		.loc 1 25 11 view .LVU12
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s 			page 3
+
+
+  93 0022 78EE209A 		vadd.f32	s19, s16, s1
+  94              	.LVL4:
+  26:Core/Src/svpwm.c ****     float Uc = -0.5f * Ualpha - 0.8660254f * Ubeta;
+  95              		.loc 1 26 5 is_stmt 1 view .LVU13
+  96              		.loc 1 26 11 is_stmt 0 view .LVU14
+  97 0026 38EE608A 		vsub.f32	s16, s16, s1
+  98              	.LVL5:
+  27:Core/Src/svpwm.c **** 
+  28:Core/Src/svpwm.c ****     /* 2. Chuẩn hóa theo DC bus */
+  29:Core/Src/svpwm.c ****     float Umax = fmaxf(fmaxf(Ua, Ub), Uc);
+  99              		.loc 1 29 5 is_stmt 1 view .LVU15
+ 100              		.loc 1 29 18 is_stmt 0 view .LVU16
+ 101 002a F0EE690A 		vmov.f32	s1, s19
+ 102 002e FFF7FEFF 		bl	fmaxf
+ 103              	.LVL6:
+ 104              		.loc 1 29 18 discriminator 1 view .LVU17
+ 105 0032 F0EE480A 		vmov.f32	s1, s16
+ 106 0036 FFF7FEFF 		bl	fmaxf
+ 107              	.LVL7:
+ 108 003a F0EE408A 		vmov.f32	s17, s0
+ 109              	.LVL8:
+  30:Core/Src/svpwm.c ****     float Umin = fminf(fminf(Ua, Ub), Uc);
+ 110              		.loc 1 30 5 is_stmt 1 view .LVU18
+ 111              		.loc 1 30 18 is_stmt 0 view .LVU19
+ 112 003e F0EE690A 		vmov.f32	s1, s19
+ 113 0042 B0EE490A 		vmov.f32	s0, s18
+ 114              	.LVL9:
+ 115              		.loc 1 30 18 view .LVU20
+ 116 0046 FFF7FEFF 		bl	fminf
+ 117              	.LVL10:
+ 118              		.loc 1 30 18 discriminator 1 view .LVU21
+ 119 004a F0EE480A 		vmov.f32	s1, s16
+ 120 004e FFF7FEFF 		bl	fminf
+ 121              	.LVL11:
+  31:Core/Src/svpwm.c **** 
+  32:Core/Src/svpwm.c ****     /* 3. SVPWM offset (vector 0) */
+  33:Core/Src/svpwm.c ****     float Uoffset = 0.5f * (Umax + Umin);
+ 122              		.loc 1 33 5 is_stmt 1 view .LVU22
+ 123              		.loc 1 33 34 is_stmt 0 view .LVU23
+ 124 0052 78EE807A 		vadd.f32	s15, s17, s0
+ 125              		.loc 1 33 11 view .LVU24
+ 126 0056 B6EE007A 		vmov.f32	s14, #5.0e-1
+ 127 005a 67EE877A 		vmul.f32	s15, s15, s14
+ 128              	.LVL12:
+  34:Core/Src/svpwm.c **** 
+  35:Core/Src/svpwm.c ****     Ua -= Uoffset;
+ 129              		.loc 1 35 5 is_stmt 1 view .LVU25
+ 130              		.loc 1 35 8 is_stmt 0 view .LVU26
+ 131 005e 39EE679A 		vsub.f32	s18, s18, s15
+ 132              	.LVL13:
+  36:Core/Src/svpwm.c ****     Ub -= Uoffset;
+ 133              		.loc 1 36 5 is_stmt 1 view .LVU27
+ 134              		.loc 1 36 8 is_stmt 0 view .LVU28
+ 135 0062 79EEE79A 		vsub.f32	s19, s19, s15
+ 136              	.LVL14:
+  37:Core/Src/svpwm.c ****     Uc -= Uoffset;
+ 137              		.loc 1 37 5 is_stmt 1 view .LVU29
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s 			page 4
+
+
+ 138              		.loc 1 37 8 is_stmt 0 view .LVU30
+ 139 0066 38EE678A 		vsub.f32	s16, s16, s15
+ 140              	.LVL15:
+  38:Core/Src/svpwm.c **** 
+  39:Core/Src/svpwm.c ****     /* 4. Convert sang duty (0 → 1) */
+  40:Core/Src/svpwm.c ****     *dutyA = 0.5f + Ua / hsvpwm->Udc;
+ 141              		.loc 1 40 5 is_stmt 1 view .LVU31
+ 142              		.loc 1 40 32 is_stmt 0 view .LVU32
+ 143 006a D7ED006A 		vldr.32	s13, [r7]
+ 144              		.loc 1 40 24 view .LVU33
+ 145 006e C9EE267A 		vdiv.f32	s15, s18, s13
+ 146              	.LVL16:
+ 147              		.loc 1 40 19 view .LVU34
+ 148 0072 77EE877A 		vadd.f32	s15, s15, s14
+ 149              		.loc 1 40 12 view .LVU35
+ 150 0076 C6ED007A 		vstr.32	s15, [r6]
+  41:Core/Src/svpwm.c ****     *dutyB = 0.5f + Ub / hsvpwm->Udc;
+ 151              		.loc 1 41 5 is_stmt 1 view .LVU36
+ 152              		.loc 1 41 32 is_stmt 0 view .LVU37
+ 153 007a D7ED006A 		vldr.32	s13, [r7]
+ 154              		.loc 1 41 24 view .LVU38
+ 155 007e C9EEA67A 		vdiv.f32	s15, s19, s13
+ 156              		.loc 1 41 19 view .LVU39
+ 157 0082 77EE877A 		vadd.f32	s15, s15, s14
+ 158              		.loc 1 41 12 view .LVU40
+ 159 0086 C5ED007A 		vstr.32	s15, [r5]
+  42:Core/Src/svpwm.c ****     *dutyC = 0.5f + Uc / hsvpwm->Udc;
+ 160              		.loc 1 42 5 is_stmt 1 view .LVU41
+ 161              		.loc 1 42 32 is_stmt 0 view .LVU42
+ 162 008a D7ED006A 		vldr.32	s13, [r7]
+ 163              		.loc 1 42 24 view .LVU43
+ 164 008e C8EE267A 		vdiv.f32	s15, s16, s13
+ 165              		.loc 1 42 19 view .LVU44
+ 166 0092 77EE877A 		vadd.f32	s15, s15, s14
+ 167              		.loc 1 42 12 view .LVU45
+ 168 0096 C4ED007A 		vstr.32	s15, [r4]
+  43:Core/Src/svpwm.c **** 
+  44:Core/Src/svpwm.c ****     /* 5. Clamp an toàn */
+  45:Core/Src/svpwm.c ****     if (*dutyA < 0) *dutyA = 0;
+ 169              		.loc 1 45 5 is_stmt 1 view .LVU46
+ 170              		.loc 1 45 9 is_stmt 0 view .LVU47
+ 171 009a D6ED007A 		vldr.32	s15, [r6]
+ 172              		.loc 1 45 8 view .LVU48
+ 173 009e F5EEC07A 		vcmpe.f32	s15, #0
+ 174 00a2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 175 00a6 31D4     		bmi	.L22
+ 176              	.L3:
+  46:Core/Src/svpwm.c ****     if (*dutyA > 1) *dutyA = 1;
+ 177              		.loc 1 46 5 is_stmt 1 view .LVU49
+ 178              		.loc 1 46 9 is_stmt 0 view .LVU50
+ 179 00a8 96ED007A 		vldr.32	s14, [r6]
+ 180              	.LVL17:
+ 181              		.loc 1 46 8 view .LVU51
+ 182 00ac F7EE007A 		vmov.f32	s15, #1.0e+0
+ 183 00b0 B4EEE77A 		vcmpe.f32	s14, s15
+ 184 00b4 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 185 00b8 01DD     		ble	.L5
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s 			page 5
+
+
+ 186              		.loc 1 46 21 is_stmt 1 discriminator 1 view .LVU52
+ 187              		.loc 1 46 28 is_stmt 0 discriminator 1 view .LVU53
+ 188 00ba C6ED007A 		vstr.32	s15, [r6]
+ 189              	.L5:
+  47:Core/Src/svpwm.c **** 
+  48:Core/Src/svpwm.c ****     if (*dutyB < 0) *dutyB = 0;
+ 190              		.loc 1 48 5 is_stmt 1 view .LVU54
+ 191              		.loc 1 48 9 is_stmt 0 view .LVU55
+ 192 00be D5ED007A 		vldr.32	s15, [r5]
+ 193              		.loc 1 48 8 view .LVU56
+ 194 00c2 F5EEC07A 		vcmpe.f32	s15, #0
+ 195 00c6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 196 00ca 22D4     		bmi	.L23
+ 197              	.L7:
+  49:Core/Src/svpwm.c ****     if (*dutyB > 1) *dutyB = 1;
+ 198              		.loc 1 49 5 is_stmt 1 view .LVU57
+ 199              		.loc 1 49 9 is_stmt 0 view .LVU58
+ 200 00cc 95ED007A 		vldr.32	s14, [r5]
+ 201              		.loc 1 49 8 view .LVU59
+ 202 00d0 F7EE007A 		vmov.f32	s15, #1.0e+0
+ 203 00d4 B4EEE77A 		vcmpe.f32	s14, s15
+ 204 00d8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 205 00dc 01DD     		ble	.L9
+ 206              		.loc 1 49 21 is_stmt 1 discriminator 1 view .LVU60
+ 207              		.loc 1 49 28 is_stmt 0 discriminator 1 view .LVU61
+ 208 00de C5ED007A 		vstr.32	s15, [r5]
+ 209              	.L9:
+  50:Core/Src/svpwm.c **** 
+  51:Core/Src/svpwm.c ****     if (*dutyC < 0) *dutyC = 0;
+ 210              		.loc 1 51 5 is_stmt 1 view .LVU62
+ 211              		.loc 1 51 9 is_stmt 0 view .LVU63
+ 212 00e2 D4ED007A 		vldr.32	s15, [r4]
+ 213              		.loc 1 51 8 view .LVU64
+ 214 00e6 F5EEC07A 		vcmpe.f32	s15, #0
+ 215 00ea F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 216 00ee 13D4     		bmi	.L24
+ 217              	.L11:
+  52:Core/Src/svpwm.c ****     if (*dutyC > 1) *dutyC = 1;
+ 218              		.loc 1 52 5 is_stmt 1 view .LVU65
+ 219              		.loc 1 52 9 is_stmt 0 view .LVU66
+ 220 00f0 94ED007A 		vldr.32	s14, [r4]
+ 221              		.loc 1 52 8 view .LVU67
+ 222 00f4 F7EE007A 		vmov.f32	s15, #1.0e+0
+ 223 00f8 B4EEE77A 		vcmpe.f32	s14, s15
+ 224 00fc F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 225 0100 01DD     		ble	.L2
+ 226              		.loc 1 52 21 is_stmt 1 discriminator 1 view .LVU68
+ 227              		.loc 1 52 28 is_stmt 0 discriminator 1 view .LVU69
+ 228 0102 C4ED007A 		vstr.32	s15, [r4]
+ 229              	.L2:
+  53:Core/Src/svpwm.c **** }
+ 230              		.loc 1 53 1 view .LVU70
+ 231 0106 BDEC048B 		vldm	sp!, {d8-d9}
+ 232              	.LCFI2:
+ 233              		.cfi_remember_state
+ 234              		.cfi_restore 82
+ 235              		.cfi_restore 83
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s 			page 6
+
+
+ 236              		.cfi_restore 80
+ 237              		.cfi_restore 81
+ 238              		.cfi_def_cfa_offset 24
+ 239              	.LVL18:
+ 240              		.loc 1 53 1 view .LVU71
+ 241 010a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 242              	.LVL19:
+ 243              	.L22:
+ 244              	.LCFI3:
+ 245              		.cfi_restore_state
+  45:Core/Src/svpwm.c ****     if (*dutyA > 1) *dutyA = 1;
+ 246              		.loc 1 45 21 is_stmt 1 discriminator 1 view .LVU72
+  45:Core/Src/svpwm.c ****     if (*dutyA > 1) *dutyA = 1;
+ 247              		.loc 1 45 28 is_stmt 0 discriminator 1 view .LVU73
+ 248 010c 0023     		movs	r3, #0
+ 249 010e 3360     		str	r3, [r6]	@ float
+ 250 0110 CAE7     		b	.L3
+ 251              	.LVL20:
+ 252              	.L23:
+  48:Core/Src/svpwm.c ****     if (*dutyB > 1) *dutyB = 1;
+ 253              		.loc 1 48 21 is_stmt 1 discriminator 1 view .LVU74
+  48:Core/Src/svpwm.c ****     if (*dutyB > 1) *dutyB = 1;
+ 254              		.loc 1 48 28 is_stmt 0 discriminator 1 view .LVU75
+ 255 0112 0023     		movs	r3, #0
+ 256 0114 2B60     		str	r3, [r5]	@ float
+ 257 0116 D9E7     		b	.L7
+ 258              	.L24:
+  51:Core/Src/svpwm.c ****     if (*dutyC > 1) *dutyC = 1;
+ 259              		.loc 1 51 21 is_stmt 1 discriminator 1 view .LVU76
+  51:Core/Src/svpwm.c ****     if (*dutyC > 1) *dutyC = 1;
+ 260              		.loc 1 51 28 is_stmt 0 discriminator 1 view .LVU77
+ 261 0118 0023     		movs	r3, #0
+ 262 011a 2360     		str	r3, [r4]	@ float
+ 263 011c E8E7     		b	.L11
+ 264              	.L26:
+ 265 011e 00BF     		.align	2
+ 266              	.L25:
+ 267 0120 D7B35D3F 		.word	1063105495
+ 268              		.cfi_endproc
+ 269              	.LFE1:
+ 271              		.text
+ 272              	.Letext0:
+ 273              		.file 2 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 274              		.file 3 "Core/Inc/svpwm.h"
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 svpwm.c
+C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s:21     .text.SVPWM_Init:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s:27     .text.SVPWM_Init:00000000 SVPWM_Init
+C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s:47     .text.SVPWM_Compute:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s:53     .text.SVPWM_Compute:00000000 SVPWM_Compute
+C:\Users\AD\AppData\Local\Temp\ccQWjL2X.s:267    .text.SVPWM_Compute:00000120 $d
+
+UNDEFINED SYMBOLS
+fmaxf
+fminf

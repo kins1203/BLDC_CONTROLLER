@@ -1,0 +1,795 @@
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"command.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/command.c"
+  20              		.section	.text.parse_float_dot,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	parse_float_dot:
+  27              	.LVL0:
+  28              	.LFB2:
+   1:Core/Src/command.c **** #include "command.h"
+   2:Core/Src/command.c **** #include <string.h>
+   3:Core/Src/command.c **** #include <ctype.h>
+   4:Core/Src/command.c **** 
+   5:Core/Src/command.c **** /* ================= INTERNAL UTILS ================= */
+   6:Core/Src/command.c **** 
+   7:Core/Src/command.c **** static void trim(char *s)
+   8:Core/Src/command.c **** {
+   9:Core/Src/command.c ****     char *p = s;
+  10:Core/Src/command.c ****     char *end;
+  11:Core/Src/command.c **** 
+  12:Core/Src/command.c ****     /* bỏ space đầu */
+  13:Core/Src/command.c ****     while (*p == ' ' || *p == '\r' || *p == '\n')
+  14:Core/Src/command.c ****         p++;
+  15:Core/Src/command.c **** 
+  16:Core/Src/command.c ****     memmove(s, p, strlen(p) + 1);
+  17:Core/Src/command.c **** 
+  18:Core/Src/command.c ****     /* bỏ space cuối */
+  19:Core/Src/command.c ****     end = s + strlen(s) - 1;
+  20:Core/Src/command.c ****     while (end >= s && (*end == ' ' || *end == '\r' || *end == '\n'))
+  21:Core/Src/command.c ****     {
+  22:Core/Src/command.c ****         *end = '\0';
+  23:Core/Src/command.c ****         end--;
+  24:Core/Src/command.c ****     }
+  25:Core/Src/command.c **** }
+  26:Core/Src/command.c **** 
+  27:Core/Src/command.c **** /* parse float bằng cách tách dấu '.' */
+  28:Core/Src/command.c **** static int parse_float_dot(const char *s, float *out)
+  29:Core/Src/command.c **** {
+  29              		.loc 1 29 1 view -0
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 2
+
+
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 29 1 is_stmt 0 view .LVU1
+  34 0000 70B5     		push	{r4, r5, r6, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 4, -16
+  38              		.cfi_offset 5, -12
+  39              		.cfi_offset 6, -8
+  40              		.cfi_offset 14, -4
+  41 0002 0346     		mov	r3, r0
+  30:Core/Src/command.c ****     int sign = 1;
+  42              		.loc 1 30 5 is_stmt 1 view .LVU2
+  43              	.LVL1:
+  31:Core/Src/command.c ****     int ip = 0;
+  44              		.loc 1 31 5 view .LVU3
+  32:Core/Src/command.c ****     int dp = 0;
+  45              		.loc 1 32 5 view .LVU4
+  33:Core/Src/command.c ****     float scale = 1.0f;
+  46              		.loc 1 33 5 view .LVU5
+  34:Core/Src/command.c ****     int has_digit = 0;
+  47              		.loc 1 34 5 view .LVU6
+  35:Core/Src/command.c **** 
+  36:Core/Src/command.c ****     while (*s == ' ')
+  48              		.loc 1 36 5 view .LVU7
+  49              		.loc 1 36 11 is_stmt 0 view .LVU8
+  50 0004 00E0     		b	.L2
+  51              	.LVL2:
+  52              	.L3:
+  37:Core/Src/command.c ****         s++;
+  53              		.loc 1 37 9 is_stmt 1 view .LVU9
+  54              		.loc 1 37 10 is_stmt 0 view .LVU10
+  55 0006 0133     		adds	r3, r3, #1
+  56              	.LVL3:
+  57              	.L2:
+  36:Core/Src/command.c ****         s++;
+  58              		.loc 1 36 15 is_stmt 1 view .LVU11
+  36:Core/Src/command.c ****         s++;
+  59              		.loc 1 36 12 is_stmt 0 view .LVU12
+  60 0008 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+  36:Core/Src/command.c ****         s++;
+  61              		.loc 1 36 15 view .LVU13
+  62 000a 202A     		cmp	r2, #32
+  63 000c FBD0     		beq	.L3
+  38:Core/Src/command.c **** 
+  39:Core/Src/command.c ****     if (*s == '-')
+  64              		.loc 1 39 5 is_stmt 1 view .LVU14
+  65              		.loc 1 39 8 is_stmt 0 view .LVU15
+  66 000e 2D2A     		cmp	r2, #45
+  67 0010 05D0     		beq	.L15
+  40:Core/Src/command.c ****     {
+  41:Core/Src/command.c ****         sign = -1;
+  42:Core/Src/command.c ****         s++;
+  43:Core/Src/command.c ****     }
+  44:Core/Src/command.c ****     else if (*s == '+')
+  68              		.loc 1 44 10 is_stmt 1 view .LVU16
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 3
+
+
+  69              		.loc 1 44 13 is_stmt 0 view .LVU17
+  70 0012 2B2A     		cmp	r2, #43
+  71 0014 07D0     		beq	.L16
+  30:Core/Src/command.c ****     int ip = 0;
+  72              		.loc 1 30 9 view .LVU18
+  73 0016 0125     		movs	r5, #1
+  74              	.LVL4:
+  75              	.L5:
+  41:Core/Src/command.c ****         s++;
+  76              		.loc 1 41 14 view .LVU19
+  77 0018 0020     		movs	r0, #0
+  78 001a 0246     		mov	r2, r0
+  79 001c 0EE0     		b	.L6
+  80              	.LVL5:
+  81              	.L15:
+  41:Core/Src/command.c ****         s++;
+  82              		.loc 1 41 9 is_stmt 1 view .LVU20
+  42:Core/Src/command.c ****     }
+  83              		.loc 1 42 9 view .LVU21
+  42:Core/Src/command.c ****     }
+  84              		.loc 1 42 10 is_stmt 0 view .LVU22
+  85 001e 0133     		adds	r3, r3, #1
+  86              	.LVL6:
+  41:Core/Src/command.c ****         s++;
+  87              		.loc 1 41 14 view .LVU23
+  88 0020 4FF0FF35 		mov	r5, #-1
+  89 0024 F8E7     		b	.L5
+  90              	.LVL7:
+  91              	.L16:
+  45:Core/Src/command.c ****     {
+  46:Core/Src/command.c ****         s++;
+  92              		.loc 1 46 9 is_stmt 1 view .LVU24
+  93              		.loc 1 46 10 is_stmt 0 view .LVU25
+  94 0026 0133     		adds	r3, r3, #1
+  95              	.LVL8:
+  30:Core/Src/command.c ****     int ip = 0;
+  96              		.loc 1 30 9 view .LVU26
+  97 0028 0125     		movs	r5, #1
+  98 002a F5E7     		b	.L5
+  99              	.LVL9:
+ 100              	.L7:
+  47:Core/Src/command.c ****     }
+  48:Core/Src/command.c **** 
+  49:Core/Src/command.c ****     while (isdigit((unsigned char)*s))
+  50:Core/Src/command.c ****     {
+  51:Core/Src/command.c ****         ip = ip * 10 + (*s - '0');
+ 101              		.loc 1 51 9 is_stmt 1 view .LVU27
+ 102              		.loc 1 51 17 is_stmt 0 view .LVU28
+ 103 002c 02EB8202 		add	r2, r2, r2, lsl #2
+ 104              	.LVL10:
+ 105              		.loc 1 51 28 view .LVU29
+ 106 0030 ACF1300C 		sub	ip, ip, #48
+ 107              		.loc 1 51 12 view .LVU30
+ 108 0034 0CEB4202 		add	r2, ip, r2, lsl #1
+ 109              	.LVL11:
+  52:Core/Src/command.c ****         has_digit = 1;
+ 110              		.loc 1 52 9 is_stmt 1 view .LVU31
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 4
+
+
+  53:Core/Src/command.c ****         s++;
+ 111              		.loc 1 53 9 view .LVU32
+ 112              		.loc 1 53 10 is_stmt 0 view .LVU33
+ 113 0038 0133     		adds	r3, r3, #1
+ 114              	.LVL12:
+  52:Core/Src/command.c ****         has_digit = 1;
+ 115              		.loc 1 52 19 view .LVU34
+ 116 003a 0120     		movs	r0, #1
+ 117              	.LVL13:
+ 118              	.L6:
+  49:Core/Src/command.c ****     {
+ 119              		.loc 1 49 12 is_stmt 1 view .LVU35
+ 120 003c 93F800C0 		ldrb	ip, [r3]	@ zero_extendqisi2
+ 121 0040 1D4C     		ldr	r4, .L18
+ 122 0042 14F80CE0 		ldrb	lr, [r4, ip]	@ zero_extendqisi2
+ 123 0046 1EF0040F 		tst	lr, #4
+ 124 004a EFD1     		bne	.L7
+  54:Core/Src/command.c ****     }
+  55:Core/Src/command.c **** 
+  56:Core/Src/command.c ****     if (*s == '.')
+ 125              		.loc 1 56 5 view .LVU36
+ 126              		.loc 1 56 8 is_stmt 0 view .LVU37
+ 127 004c BCF12E0F 		cmp	ip, #46
+ 128 0050 18D0     		beq	.L17
+  33:Core/Src/command.c ****     int has_digit = 0;
+ 129              		.loc 1 33 11 view .LVU38
+ 130 0052 F7EE007A 		vmov.f32	s15, #1.0e+0
+  32:Core/Src/command.c ****     float scale = 1.0f;
+ 131              		.loc 1 32 9 view .LVU39
+ 132 0056 0024     		movs	r4, #0
+ 133              	.LVL14:
+ 134              	.L8:
+  57:Core/Src/command.c ****     {
+  58:Core/Src/command.c ****         s++;
+  59:Core/Src/command.c ****         while (isdigit((unsigned char)*s))
+  60:Core/Src/command.c ****         {
+  61:Core/Src/command.c ****             dp = dp * 10 + (*s - '0');
+  62:Core/Src/command.c ****             scale *= 0.1f;
+  63:Core/Src/command.c ****             has_digit = 1;
+  64:Core/Src/command.c ****             s++;
+  65:Core/Src/command.c ****         }
+  66:Core/Src/command.c ****     }
+  67:Core/Src/command.c **** 
+  68:Core/Src/command.c ****     if (!has_digit)
+ 135              		.loc 1 68 5 is_stmt 1 view .LVU40
+ 136              		.loc 1 68 8 is_stmt 0 view .LVU41
+ 137 0058 98B1     		cbz	r0, .L1
+  69:Core/Src/command.c ****         return 0;
+  70:Core/Src/command.c **** 
+  71:Core/Src/command.c ****     *out = sign * (ip + dp * scale);
+ 138              		.loc 1 71 5 is_stmt 1 view .LVU42
+ 139              		.loc 1 71 28 is_stmt 0 view .LVU43
+ 140 005a 07EE104A 		vmov	s14, r4	@ int
+ 141 005e B8EEC77A 		vcvt.f32.s32	s14, s14
+ 142 0062 27EE277A 		vmul.f32	s14, s14, s15
+ 143              		.loc 1 71 23 view .LVU44
+ 144 0066 07EE902A 		vmov	s15, r2	@ int
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 5
+
+
+ 145              	.LVL15:
+ 146              		.loc 1 71 23 view .LVU45
+ 147 006a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 148 006e 77EE877A 		vadd.f32	s15, s15, s14
+ 149              		.loc 1 71 17 view .LVU46
+ 150 0072 07EE105A 		vmov	s14, r5	@ int
+ 151 0076 B8EEC77A 		vcvt.f32.s32	s14, s14
+ 152 007a 67EE277A 		vmul.f32	s15, s14, s15
+ 153              		.loc 1 71 10 view .LVU47
+ 154 007e C1ED007A 		vstr.32	s15, [r1]
+  72:Core/Src/command.c ****     return 1;
+ 155              		.loc 1 72 5 is_stmt 1 view .LVU48
+ 156              	.L1:
+  73:Core/Src/command.c **** }
+ 157              		.loc 1 73 1 is_stmt 0 view .LVU49
+ 158 0082 70BD     		pop	{r4, r5, r6, pc}
+ 159              	.LVL16:
+ 160              	.L17:
+  58:Core/Src/command.c ****         while (isdigit((unsigned char)*s))
+ 161              		.loc 1 58 9 is_stmt 1 view .LVU50
+  58:Core/Src/command.c ****         while (isdigit((unsigned char)*s))
+ 162              		.loc 1 58 10 is_stmt 0 view .LVU51
+ 163 0084 0133     		adds	r3, r3, #1
+ 164              	.LVL17:
+  59:Core/Src/command.c ****         {
+ 165              		.loc 1 59 9 is_stmt 1 view .LVU52
+  33:Core/Src/command.c ****     int has_digit = 0;
+ 166              		.loc 1 33 11 is_stmt 0 view .LVU53
+ 167 0086 F7EE007A 		vmov.f32	s15, #1.0e+0
+  32:Core/Src/command.c ****     float scale = 1.0f;
+ 168              		.loc 1 32 9 view .LVU54
+ 169 008a 0024     		movs	r4, #0
+  59:Core/Src/command.c ****         {
+ 170              		.loc 1 59 15 view .LVU55
+ 171 008c 0BE0     		b	.L9
+ 172              	.LVL18:
+ 173              	.L10:
+  61:Core/Src/command.c ****             scale *= 0.1f;
+ 174              		.loc 1 61 13 is_stmt 1 view .LVU56
+  61:Core/Src/command.c ****             scale *= 0.1f;
+ 175              		.loc 1 61 21 is_stmt 0 view .LVU57
+ 176 008e 04EB8404 		add	r4, r4, r4, lsl #2
+ 177              	.LVL19:
+  61:Core/Src/command.c ****             scale *= 0.1f;
+ 178              		.loc 1 61 32 view .LVU58
+ 179 0092 ACF1300C 		sub	ip, ip, #48
+  61:Core/Src/command.c ****             scale *= 0.1f;
+ 180              		.loc 1 61 16 view .LVU59
+ 181 0096 0CEB4404 		add	r4, ip, r4, lsl #1
+ 182              	.LVL20:
+  62:Core/Src/command.c ****             has_digit = 1;
+ 183              		.loc 1 62 13 is_stmt 1 view .LVU60
+  62:Core/Src/command.c ****             has_digit = 1;
+ 184              		.loc 1 62 19 is_stmt 0 view .LVU61
+ 185 009a 9FED087A 		vldr.32	s14, .L18+4
+ 186 009e 67EE877A 		vmul.f32	s15, s15, s14
+ 187              	.LVL21:
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 6
+
+
+  63:Core/Src/command.c ****             s++;
+ 188              		.loc 1 63 13 is_stmt 1 view .LVU62
+  64:Core/Src/command.c ****         }
+ 189              		.loc 1 64 13 view .LVU63
+  64:Core/Src/command.c ****         }
+ 190              		.loc 1 64 14 is_stmt 0 view .LVU64
+ 191 00a2 0133     		adds	r3, r3, #1
+ 192              	.LVL22:
+  63:Core/Src/command.c ****             s++;
+ 193              		.loc 1 63 23 view .LVU65
+ 194 00a4 0120     		movs	r0, #1
+ 195              	.LVL23:
+ 196              	.L9:
+  59:Core/Src/command.c ****         {
+ 197              		.loc 1 59 16 is_stmt 1 view .LVU66
+ 198 00a6 93F800C0 		ldrb	ip, [r3]	@ zero_extendqisi2
+ 199 00aa 034E     		ldr	r6, .L18
+ 200 00ac 16F80CE0 		ldrb	lr, [r6, ip]	@ zero_extendqisi2
+ 201 00b0 1EF0040F 		tst	lr, #4
+ 202 00b4 EBD1     		bne	.L10
+  59:Core/Src/command.c ****         {
+ 203              		.loc 1 59 16 is_stmt 0 view .LVU67
+ 204 00b6 CFE7     		b	.L8
+ 205              	.L19:
+ 206              		.align	2
+ 207              	.L18:
+ 208 00b8 01000000 		.word	_ctype_+1
+ 209 00bc CDCCCC3D 		.word	1036831949
+ 210              		.cfi_endproc
+ 211              	.LFE2:
+ 213              		.section	.text.trim,"ax",%progbits
+ 214              		.align	1
+ 215              		.syntax unified
+ 216              		.thumb
+ 217              		.thumb_func
+ 219              	trim:
+ 220              	.LVL24:
+ 221              	.LFB1:
+   8:Core/Src/command.c ****     char *p = s;
+ 222              		.loc 1 8 1 is_stmt 1 view -0
+ 223              		.cfi_startproc
+ 224              		@ args = 0, pretend = 0, frame = 0
+ 225              		@ frame_needed = 0, uses_anonymous_args = 0
+   8:Core/Src/command.c ****     char *p = s;
+ 226              		.loc 1 8 1 is_stmt 0 view .LVU69
+ 227 0000 38B5     		push	{r3, r4, r5, lr}
+ 228              	.LCFI1:
+ 229              		.cfi_def_cfa_offset 16
+ 230              		.cfi_offset 3, -16
+ 231              		.cfi_offset 4, -12
+ 232              		.cfi_offset 5, -8
+ 233              		.cfi_offset 14, -4
+ 234 0002 0446     		mov	r4, r0
+   9:Core/Src/command.c ****     char *end;
+ 235              		.loc 1 9 5 is_stmt 1 view .LVU70
+ 236              	.LVL25:
+  10:Core/Src/command.c **** 
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 7
+
+
+ 237              		.loc 1 10 5 view .LVU71
+  13:Core/Src/command.c ****         p++;
+ 238              		.loc 1 13 5 view .LVU72
+   9:Core/Src/command.c ****     char *end;
+ 239              		.loc 1 9 11 is_stmt 0 view .LVU73
+ 240 0004 0546     		mov	r5, r0
+  13:Core/Src/command.c ****         p++;
+ 241              		.loc 1 13 11 view .LVU74
+ 242 0006 00E0     		b	.L21
+ 243              	.LVL26:
+ 244              	.L23:
+  14:Core/Src/command.c **** 
+ 245              		.loc 1 14 9 is_stmt 1 view .LVU75
+  14:Core/Src/command.c **** 
+ 246              		.loc 1 14 10 is_stmt 0 view .LVU76
+ 247 0008 0135     		adds	r5, r5, #1
+ 248              	.LVL27:
+ 249              	.L21:
+  13:Core/Src/command.c ****         p++;
+ 250              		.loc 1 13 36 is_stmt 1 view .LVU77
+  13:Core/Src/command.c ****         p++;
+ 251              		.loc 1 13 12 is_stmt 0 view .LVU78
+ 252 000a 2B78     		ldrb	r3, [r5]	@ zero_extendqisi2
+ 253 000c 0A3B     		subs	r3, r3, #10
+ 254 000e DBB2     		uxtb	r3, r3
+ 255 0010 162B     		cmp	r3, #22
+ 256 0012 05D8     		bhi	.L22
+ 257 0014 124A     		ldr	r2, .L28
+ 258 0016 22FA03F3 		lsr	r3, r2, r3
+ 259 001a 13F0010F 		tst	r3, #1
+ 260 001e F3D1     		bne	.L23
+ 261              	.L22:
+  16:Core/Src/command.c **** 
+ 262              		.loc 1 16 5 is_stmt 1 view .LVU79
+  16:Core/Src/command.c **** 
+ 263              		.loc 1 16 19 is_stmt 0 view .LVU80
+ 264 0020 2846     		mov	r0, r5
+ 265              	.LVL28:
+  16:Core/Src/command.c **** 
+ 266              		.loc 1 16 19 view .LVU81
+ 267 0022 FFF7FEFF 		bl	strlen
+ 268              	.LVL29:
+  16:Core/Src/command.c **** 
+ 269              		.loc 1 16 5 discriminator 1 view .LVU82
+ 270 0026 421C     		adds	r2, r0, #1
+ 271 0028 2946     		mov	r1, r5
+ 272 002a 2046     		mov	r0, r4
+ 273 002c FFF7FEFF 		bl	memmove
+ 274              	.LVL30:
+  19:Core/Src/command.c ****     while (end >= s && (*end == ' ' || *end == '\r' || *end == '\n'))
+ 275              		.loc 1 19 5 is_stmt 1 view .LVU83
+  19:Core/Src/command.c ****     while (end >= s && (*end == ' ' || *end == '\r' || *end == '\n'))
+ 276              		.loc 1 19 15 is_stmt 0 view .LVU84
+ 277 0030 2046     		mov	r0, r4
+ 278 0032 FFF7FEFF 		bl	strlen
+ 279              	.LVL31:
+  19:Core/Src/command.c ****     while (end >= s && (*end == ' ' || *end == '\r' || *end == '\n'))
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 8
+
+
+ 280              		.loc 1 19 25 discriminator 1 view .LVU85
+ 281 0036 421E     		subs	r2, r0, #1
+  19:Core/Src/command.c ****     while (end >= s && (*end == ' ' || *end == '\r' || *end == '\n'))
+ 282              		.loc 1 19 9 discriminator 1 view .LVU86
+ 283 0038 2244     		add	r2, r2, r4
+ 284              	.LVL32:
+  20:Core/Src/command.c ****     {
+ 285              		.loc 1 20 5 is_stmt 1 view .LVU87
+  20:Core/Src/command.c ****     {
+ 286              		.loc 1 20 11 is_stmt 0 view .LVU88
+ 287 003a 02E0     		b	.L24
+ 288              	.L26:
+  22:Core/Src/command.c ****         end--;
+ 289              		.loc 1 22 9 is_stmt 1 view .LVU89
+  22:Core/Src/command.c ****         end--;
+ 290              		.loc 1 22 14 is_stmt 0 view .LVU90
+ 291 003c 0023     		movs	r3, #0
+ 292 003e 02F80139 		strb	r3, [r2], #-1
+ 293              	.LVL33:
+  23:Core/Src/command.c ****     }
+ 294              		.loc 1 23 9 is_stmt 1 view .LVU91
+ 295              	.L24:
+  20:Core/Src/command.c ****     {
+ 296              		.loc 1 20 21 view .LVU92
+ 297 0042 A242     		cmp	r2, r4
+ 298 0044 0AD3     		bcc	.L20
+  20:Core/Src/command.c ****     {
+ 299              		.loc 1 20 25 is_stmt 0 discriminator 1 view .LVU93
+ 300 0046 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 301 0048 0A3B     		subs	r3, r3, #10
+ 302 004a DBB2     		uxtb	r3, r3
+ 303 004c 162B     		cmp	r3, #22
+ 304 004e 05D8     		bhi	.L20
+ 305 0050 0349     		ldr	r1, .L28
+ 306 0052 21FA03F3 		lsr	r3, r1, r3
+ 307 0056 13F0010F 		tst	r3, #1
+ 308 005a EFD1     		bne	.L26
+ 309              	.L20:
+  25:Core/Src/command.c **** 
+ 310              		.loc 1 25 1 view .LVU94
+ 311 005c 38BD     		pop	{r3, r4, r5, pc}
+ 312              	.LVL34:
+ 313              	.L29:
+  25:Core/Src/command.c **** 
+ 314              		.loc 1 25 1 view .LVU95
+ 315 005e 00BF     		.align	2
+ 316              	.L28:
+ 317 0060 09004000 		.word	4194313
+ 318              		.cfi_endproc
+ 319              	.LFE1:
+ 321              		.section	.text.Command_Parse,"ax",%progbits
+ 322              		.align	1
+ 323              		.global	Command_Parse
+ 324              		.syntax unified
+ 325              		.thumb
+ 326              		.thumb_func
+ 328              	Command_Parse:
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 9
+
+
+ 329              	.LVL35:
+ 330              	.LFB3:
+  74:Core/Src/command.c **** 
+  75:Core/Src/command.c **** /* ================= PUBLIC API ================= */
+  76:Core/Src/command.c **** 
+  77:Core/Src/command.c **** int Command_Parse(char *input, CmdParsed_t *out)
+  78:Core/Src/command.c **** {
+ 331              		.loc 1 78 1 is_stmt 1 view -0
+ 332              		.cfi_startproc
+ 333              		@ args = 0, pretend = 0, frame = 0
+ 334              		@ frame_needed = 0, uses_anonymous_args = 0
+  79:Core/Src/command.c ****     char *comma;
+ 335              		.loc 1 79 5 view .LVU97
+  80:Core/Src/command.c ****     char *eq;
+ 336              		.loc 1 80 5 view .LVU98
+  81:Core/Src/command.c **** 
+  82:Core/Src/command.c ****     if (!input || !out)
+ 337              		.loc 1 82 5 view .LVU99
+ 338              		.loc 1 82 8 is_stmt 0 view .LVU100
+ 339 0000 0028     		cmp	r0, #0
+ 340 0002 5AD0     		beq	.L35
+  78:Core/Src/command.c ****     char *comma;
+ 341              		.loc 1 78 1 view .LVU101
+ 342 0004 70B5     		push	{r4, r5, r6, lr}
+ 343              	.LCFI2:
+ 344              		.cfi_def_cfa_offset 16
+ 345              		.cfi_offset 4, -16
+ 346              		.cfi_offset 5, -12
+ 347              		.cfi_offset 6, -8
+ 348              		.cfi_offset 14, -4
+ 349 0006 0C46     		mov	r4, r1
+ 350 0008 0646     		mov	r6, r0
+ 351              		.loc 1 82 16 discriminator 1 view .LVU102
+ 352 000a 0029     		cmp	r1, #0
+ 353 000c 57D0     		beq	.L36
+  83:Core/Src/command.c ****         return 0;
+  84:Core/Src/command.c **** 
+  85:Core/Src/command.c ****     memset(out, 0, sizeof(CmdParsed_t));
+ 354              		.loc 1 85 5 is_stmt 1 view .LVU103
+ 355 000e 2822     		movs	r2, #40
+ 356 0010 0021     		movs	r1, #0
+ 357              	.LVL36:
+ 358              		.loc 1 85 5 is_stmt 0 view .LVU104
+ 359 0012 2046     		mov	r0, r4
+ 360              	.LVL37:
+ 361              		.loc 1 85 5 view .LVU105
+ 362 0014 FFF7FEFF 		bl	memset
+ 363              	.LVL38:
+  86:Core/Src/command.c **** 
+  87:Core/Src/command.c ****     trim(input);
+ 364              		.loc 1 87 5 is_stmt 1 view .LVU106
+ 365 0018 3046     		mov	r0, r6
+ 366 001a FFF7FEFF 		bl	trim
+ 367              	.LVL39:
+  88:Core/Src/command.c **** 
+  89:Core/Src/command.c ****     /* tìm dấu ',' */
+  90:Core/Src/command.c ****     comma = strchr(input, ',');
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 10
+
+
+ 368              		.loc 1 90 5 view .LVU107
+ 369              		.loc 1 90 13 is_stmt 0 view .LVU108
+ 370 001e 2C21     		movs	r1, #44
+ 371 0020 3046     		mov	r0, r6
+ 372 0022 FFF7FEFF 		bl	strchr
+ 373              	.LVL40:
+  91:Core/Src/command.c **** 
+  92:Core/Src/command.c ****     /* ---- chỉ có CMD ---- */
+  93:Core/Src/command.c ****     if (!comma)
+ 374              		.loc 1 93 5 is_stmt 1 view .LVU109
+ 375              		.loc 1 93 8 is_stmt 0 view .LVU110
+ 376 0026 0546     		mov	r5, r0
+ 377 0028 78B3     		cbz	r0, .L41
+  94:Core/Src/command.c ****     {
+  95:Core/Src/command.c ****         strncpy(out->cmd, input, sizeof(out->cmd) - 1);
+  96:Core/Src/command.c ****         out->has_key = 0;
+  97:Core/Src/command.c ****         out->has_value = 0;
+  98:Core/Src/command.c ****         return 1;
+  99:Core/Src/command.c ****     }
+ 100:Core/Src/command.c **** 
+ 101:Core/Src/command.c ****     /* ---- CMD ---- */
+ 102:Core/Src/command.c ****     *comma = '\0';
+ 378              		.loc 1 102 5 is_stmt 1 view .LVU111
+ 379              		.loc 1 102 12 is_stmt 0 view .LVU112
+ 380 002a 0023     		movs	r3, #0
+ 381 002c 05F8013B 		strb	r3, [r5], #1
+ 103:Core/Src/command.c ****     trim(input);
+ 382              		.loc 1 103 5 is_stmt 1 view .LVU113
+ 383 0030 3046     		mov	r0, r6
+ 384              	.LVL41:
+ 385              		.loc 1 103 5 is_stmt 0 view .LVU114
+ 386 0032 FFF7FEFF 		bl	trim
+ 387              	.LVL42:
+ 104:Core/Src/command.c ****     strncpy(out->cmd, input, sizeof(out->cmd) - 1);
+ 388              		.loc 1 104 5 is_stmt 1 view .LVU115
+ 389 0036 0F22     		movs	r2, #15
+ 390 0038 3146     		mov	r1, r6
+ 391 003a 2046     		mov	r0, r4
+ 392 003c FFF7FEFF 		bl	strncpy
+ 393              	.LVL43:
+ 105:Core/Src/command.c **** 
+ 106:Core/Src/command.c ****     /* ---- KEY = VALUE ---- */
+ 107:Core/Src/command.c ****     char *kv = comma + 1;
+ 394              		.loc 1 107 5 view .LVU116
+ 108:Core/Src/command.c ****     trim(kv);
+ 395              		.loc 1 108 5 view .LVU117
+ 396 0040 2846     		mov	r0, r5
+ 397 0042 FFF7FEFF 		bl	trim
+ 398              	.LVL44:
+ 109:Core/Src/command.c **** 
+ 110:Core/Src/command.c ****     eq = strchr(kv, '=');
+ 399              		.loc 1 110 5 view .LVU118
+ 400              		.loc 1 110 10 is_stmt 0 view .LVU119
+ 401 0046 3D21     		movs	r1, #61
+ 402 0048 2846     		mov	r0, r5
+ 403 004a FFF7FEFF 		bl	strchr
+ 404              	.LVL45:
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 11
+
+
+ 111:Core/Src/command.c ****     if (!eq)
+ 405              		.loc 1 111 5 is_stmt 1 view .LVU120
+ 406              		.loc 1 111 8 is_stmt 0 view .LVU121
+ 407 004e 0646     		mov	r6, r0
+ 408              	.LVL46:
+ 409              		.loc 1 111 8 view .LVU122
+ 410 0050 38B3     		cbz	r0, .L42
+ 112:Core/Src/command.c ****     {
+ 113:Core/Src/command.c ****         out->has_key = 0;
+ 114:Core/Src/command.c ****         out->has_value = 0;
+ 115:Core/Src/command.c ****         return 1;
+ 116:Core/Src/command.c ****     }
+ 117:Core/Src/command.c **** 
+ 118:Core/Src/command.c ****     *eq = '\0';
+ 411              		.loc 1 118 5 is_stmt 1 view .LVU123
+ 412              		.loc 1 118 9 is_stmt 0 view .LVU124
+ 413 0052 0023     		movs	r3, #0
+ 414 0054 06F8013B 		strb	r3, [r6], #1
+ 119:Core/Src/command.c ****     trim(kv);
+ 415              		.loc 1 119 5 is_stmt 1 view .LVU125
+ 416 0058 2846     		mov	r0, r5
+ 417              	.LVL47:
+ 418              		.loc 1 119 5 is_stmt 0 view .LVU126
+ 419 005a FFF7FEFF 		bl	trim
+ 420              	.LVL48:
+ 120:Core/Src/command.c ****     trim(eq + 1);
+ 421              		.loc 1 120 5 is_stmt 1 view .LVU127
+ 422 005e 3046     		mov	r0, r6
+ 423 0060 FFF7FEFF 		bl	trim
+ 424              	.LVL49:
+ 121:Core/Src/command.c **** 
+ 122:Core/Src/command.c ****     strncpy(out->key, kv, sizeof(out->key) - 1);
+ 425              		.loc 1 122 5 view .LVU128
+ 426 0064 0F22     		movs	r2, #15
+ 427 0066 2946     		mov	r1, r5
+ 428 0068 04F11000 		add	r0, r4, #16
+ 429 006c FFF7FEFF 		bl	strncpy
+ 430              	.LVL50:
+ 123:Core/Src/command.c ****     out->has_key = 1;
+ 431              		.loc 1 123 5 view .LVU129
+ 432              		.loc 1 123 18 is_stmt 0 view .LVU130
+ 433 0070 0123     		movs	r3, #1
+ 434 0072 84F82430 		strb	r3, [r4, #36]
+ 124:Core/Src/command.c **** 
+ 125:Core/Src/command.c ****     if (parse_float_dot(eq + 1, &out->value))
+ 435              		.loc 1 125 5 is_stmt 1 view .LVU131
+ 436              		.loc 1 125 9 is_stmt 0 view .LVU132
+ 437 0076 04F12001 		add	r1, r4, #32
+ 438 007a 3046     		mov	r0, r6
+ 439 007c FFF7FEFF 		bl	parse_float_dot
+ 440              	.LVL51:
+ 441              		.loc 1 125 8 discriminator 1 view .LVU133
+ 442 0080 B0B1     		cbz	r0, .L34
+ 126:Core/Src/command.c ****         out->has_value = 1;
+ 443              		.loc 1 126 9 is_stmt 1 view .LVU134
+ 444              		.loc 1 126 24 is_stmt 0 view .LVU135
+ 445 0082 0120     		movs	r0, #1
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 12
+
+
+ 446 0084 84F82500 		strb	r0, [r4, #37]
+ 447 0088 1AE0     		b	.L30
+ 448              	.LVL52:
+ 449              	.L41:
+  95:Core/Src/command.c ****         out->has_key = 0;
+ 450              		.loc 1 95 9 is_stmt 1 view .LVU136
+ 451 008a 0F22     		movs	r2, #15
+ 452 008c 3146     		mov	r1, r6
+ 453 008e 2046     		mov	r0, r4
+ 454              	.LVL53:
+  95:Core/Src/command.c ****         out->has_key = 0;
+ 455              		.loc 1 95 9 is_stmt 0 view .LVU137
+ 456 0090 FFF7FEFF 		bl	strncpy
+ 457              	.LVL54:
+  96:Core/Src/command.c ****         out->has_value = 0;
+ 458              		.loc 1 96 9 is_stmt 1 view .LVU138
+  96:Core/Src/command.c ****         out->has_value = 0;
+ 459              		.loc 1 96 22 is_stmt 0 view .LVU139
+ 460 0094 0023     		movs	r3, #0
+ 461 0096 84F82430 		strb	r3, [r4, #36]
+  97:Core/Src/command.c ****         return 1;
+ 462              		.loc 1 97 9 is_stmt 1 view .LVU140
+  97:Core/Src/command.c ****         return 1;
+ 463              		.loc 1 97 24 is_stmt 0 view .LVU141
+ 464 009a 84F82530 		strb	r3, [r4, #37]
+  98:Core/Src/command.c ****     }
+ 465              		.loc 1 98 9 is_stmt 1 view .LVU142
+  98:Core/Src/command.c ****     }
+ 466              		.loc 1 98 16 is_stmt 0 view .LVU143
+ 467 009e 0120     		movs	r0, #1
+ 468 00a0 0EE0     		b	.L30
+ 469              	.LVL55:
+ 470              	.L42:
+ 113:Core/Src/command.c ****         out->has_value = 0;
+ 471              		.loc 1 113 9 is_stmt 1 view .LVU144
+ 113:Core/Src/command.c ****         out->has_value = 0;
+ 472              		.loc 1 113 22 is_stmt 0 view .LVU145
+ 473 00a2 0023     		movs	r3, #0
+ 474 00a4 84F82430 		strb	r3, [r4, #36]
+ 114:Core/Src/command.c ****         return 1;
+ 475              		.loc 1 114 9 is_stmt 1 view .LVU146
+ 114:Core/Src/command.c ****         return 1;
+ 476              		.loc 1 114 24 is_stmt 0 view .LVU147
+ 477 00a8 84F82530 		strb	r3, [r4, #37]
+ 115:Core/Src/command.c ****     }
+ 478              		.loc 1 115 9 is_stmt 1 view .LVU148
+ 115:Core/Src/command.c ****     }
+ 479              		.loc 1 115 16 is_stmt 0 view .LVU149
+ 480 00ac 0120     		movs	r0, #1
+ 481              	.LVL56:
+ 115:Core/Src/command.c ****     }
+ 482              		.loc 1 115 16 view .LVU150
+ 483 00ae 07E0     		b	.L30
+ 484              	.LVL57:
+ 485              	.L34:
+ 127:Core/Src/command.c ****     else
+ 128:Core/Src/command.c ****         out->has_value = 0;
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 13
+
+
+ 486              		.loc 1 128 9 is_stmt 1 view .LVU151
+ 487              		.loc 1 128 24 is_stmt 0 view .LVU152
+ 488 00b0 0023     		movs	r3, #0
+ 489 00b2 84F82530 		strb	r3, [r4, #37]
+ 129:Core/Src/command.c **** 
+ 130:Core/Src/command.c ****     return 1;
+ 490              		.loc 1 130 12 view .LVU153
+ 491 00b6 0120     		movs	r0, #1
+ 492 00b8 02E0     		b	.L30
+ 493              	.LVL58:
+ 494              	.L35:
+ 495              	.LCFI3:
+ 496              		.cfi_def_cfa_offset 0
+ 497              		.cfi_restore 4
+ 498              		.cfi_restore 5
+ 499              		.cfi_restore 6
+ 500              		.cfi_restore 14
+  83:Core/Src/command.c **** 
+ 501              		.loc 1 83 16 view .LVU154
+ 502 00ba 0020     		movs	r0, #0
+ 503              	.LVL59:
+ 131:Core/Src/command.c **** }
+ 504              		.loc 1 131 1 view .LVU155
+ 505 00bc 7047     		bx	lr
+ 506              	.LVL60:
+ 507              	.L36:
+ 508              	.LCFI4:
+ 509              		.cfi_def_cfa_offset 16
+ 510              		.cfi_offset 4, -16
+ 511              		.cfi_offset 5, -12
+ 512              		.cfi_offset 6, -8
+ 513              		.cfi_offset 14, -4
+  83:Core/Src/command.c **** 
+ 514              		.loc 1 83 16 view .LVU156
+ 515 00be 0020     		movs	r0, #0
+ 516              	.LVL61:
+ 517              	.L30:
+ 518              		.loc 1 131 1 view .LVU157
+ 519 00c0 70BD     		pop	{r4, r5, r6, pc}
+ 520              		.loc 1 131 1 view .LVU158
+ 521              		.cfi_endproc
+ 522              	.LFE3:
+ 524              		.text
+ 525              	.Letext0:
+ 526              		.file 2 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 527              		.file 3 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 528              		.file 4 "Core/Inc/command.h"
+ 529              		.file 5 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 530              		.file 6 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 531              		.file 7 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 532              		.file 8 "<built-in>"
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccOP5mng.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 command.c
+C:\Users\AD\AppData\Local\Temp\ccOP5mng.s:21     .text.parse_float_dot:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccOP5mng.s:26     .text.parse_float_dot:00000000 parse_float_dot
+C:\Users\AD\AppData\Local\Temp\ccOP5mng.s:208    .text.parse_float_dot:000000b8 $d
+C:\Users\AD\AppData\Local\Temp\ccOP5mng.s:214    .text.trim:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccOP5mng.s:219    .text.trim:00000000 trim
+C:\Users\AD\AppData\Local\Temp\ccOP5mng.s:317    .text.trim:00000060 $d
+C:\Users\AD\AppData\Local\Temp\ccOP5mng.s:322    .text.Command_Parse:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccOP5mng.s:328    .text.Command_Parse:00000000 Command_Parse
+
+UNDEFINED SYMBOLS
+_ctype_
+strlen
+memmove
+memset
+strchr
+strncpy

@@ -1,0 +1,795 @@
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"drv8301.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/drv8301.c"
+  20              		.section	.text.DRV8301_TransferDMA,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	DRV8301_TransferDMA:
+  27              	.LVL0:
+  28              	.LFB139:
+   1:Core/Src/drv8301.c **** #include "drv8301.h"
+   2:Core/Src/drv8301.c **** 
+   3:Core/Src/drv8301.c **** /* ================== GPIO ======================== */
+   4:Core/Src/drv8301.c **** 
+   5:Core/Src/drv8301.c **** static inline void DRV8301_CS_LOW(DRV8301_HandleTypeDef *drv)
+   6:Core/Src/drv8301.c **** {
+   7:Core/Src/drv8301.c ****     HAL_GPIO_WritePin(drv->CS_Port, drv->CS_Pin, GPIO_PIN_RESET);
+   8:Core/Src/drv8301.c **** }
+   9:Core/Src/drv8301.c **** 
+  10:Core/Src/drv8301.c **** static inline void DRV8301_CS_HIGH(DRV8301_HandleTypeDef *drv)
+  11:Core/Src/drv8301.c **** {
+  12:Core/Src/drv8301.c ****     HAL_GPIO_WritePin(drv->CS_Port, drv->CS_Pin, GPIO_PIN_SET);
+  13:Core/Src/drv8301.c **** }
+  14:Core/Src/drv8301.c **** 
+  15:Core/Src/drv8301.c **** /* ================== EN_GATE ===================== */
+  16:Core/Src/drv8301.c **** 
+  17:Core/Src/drv8301.c **** void DRV8301_EnableGate(DRV8301_HandleTypeDef *drv)
+  18:Core/Src/drv8301.c **** {
+  19:Core/Src/drv8301.c ****     HAL_GPIO_WritePin(drv->EN_Port, drv->EN_Pin, GPIO_PIN_SET);
+  20:Core/Src/drv8301.c ****     HAL_Delay(1);   // cho charge pump ổn định
+  21:Core/Src/drv8301.c **** }
+  22:Core/Src/drv8301.c **** 
+  23:Core/Src/drv8301.c **** void DRV8301_DisableGate(DRV8301_HandleTypeDef *drv)
+  24:Core/Src/drv8301.c **** {
+  25:Core/Src/drv8301.c ****     HAL_GPIO_WritePin(drv->EN_Port, drv->EN_Pin, GPIO_PIN_RESET);
+  26:Core/Src/drv8301.c **** }
+  27:Core/Src/drv8301.c **** 
+  28:Core/Src/drv8301.c **** /* ================== INIT ======================== */
+  29:Core/Src/drv8301.c **** 
+  30:Core/Src/drv8301.c **** void DRV8301_Init(DRV8301_HandleTypeDef *drv)
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 2
+
+
+  31:Core/Src/drv8301.c **** {
+  32:Core/Src/drv8301.c ****     DRV8301_CS_HIGH(drv);
+  33:Core/Src/drv8301.c ****     DRV8301_DisableGate(drv);   // an toàn khi init
+  34:Core/Src/drv8301.c ****     drv->dma_done = 0;
+  35:Core/Src/drv8301.c **** }
+  36:Core/Src/drv8301.c **** 
+  37:Core/Src/drv8301.c **** /* ================== TRANSFER ==================== */
+  38:Core/Src/drv8301.c **** 
+  39:Core/Src/drv8301.c **** static HAL_StatusTypeDef DRV8301_TransferDMA(
+  40:Core/Src/drv8301.c ****     DRV8301_HandleTypeDef *drv,
+  41:Core/Src/drv8301.c ****     uint16_t tx,
+  42:Core/Src/drv8301.c ****     uint16_t *rx
+  43:Core/Src/drv8301.c **** )
+  44:Core/Src/drv8301.c **** {
+  29              		.loc 1 44 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 44 1 is_stmt 0 view .LVU1
+  34 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 24
+  37              		.cfi_offset 3, -24
+  38              		.cfi_offset 4, -20
+  39              		.cfi_offset 5, -16
+  40              		.cfi_offset 6, -12
+  41              		.cfi_offset 7, -8
+  42              		.cfi_offset 14, -4
+  43 0002 0446     		mov	r4, r0
+  44 0004 1646     		mov	r6, r2
+  45:Core/Src/drv8301.c ****     drv->dma_done = 0;
+  45              		.loc 1 45 5 is_stmt 1 view .LVU2
+  46              		.loc 1 45 19 is_stmt 0 view .LVU3
+  47 0006 0022     		movs	r2, #0
+  48              	.LVL1:
+  49              		.loc 1 45 19 view .LVU4
+  50 0008 8275     		strb	r2, [r0, #22]
+  46:Core/Src/drv8301.c ****     drv->tx_buf = tx;
+  51              		.loc 1 46 5 is_stmt 1 view .LVU5
+  52              		.loc 1 46 17 is_stmt 0 view .LVU6
+  53 000a 4182     		strh	r1, [r0, #18]	@ movhi
+  47:Core/Src/drv8301.c **** 
+  48:Core/Src/drv8301.c ****     DRV8301_CS_LOW(drv);
+  54              		.loc 1 48 5 is_stmt 1 view .LVU7
+  55              	.LVL2:
+  56              	.LBB12:
+  57              	.LBI12:
+   5:Core/Src/drv8301.c **** {
+  58              		.loc 1 5 20 view .LVU8
+  59              	.LBB13:
+   7:Core/Src/drv8301.c **** }
+  60              		.loc 1 7 5 view .LVU9
+  61 000c 0189     		ldrh	r1, [r0, #8]
+  62              	.LVL3:
+   7:Core/Src/drv8301.c **** }
+  63              		.loc 1 7 5 is_stmt 0 view .LVU10
+  64 000e 4068     		ldr	r0, [r0, #4]
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 3
+
+
+  65              	.LVL4:
+   7:Core/Src/drv8301.c **** }
+  66              		.loc 1 7 5 view .LVU11
+  67 0010 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  68              	.LVL5:
+   7:Core/Src/drv8301.c **** }
+  69              		.loc 1 7 5 view .LVU12
+  70              	.LBE13:
+  71              	.LBE12:
+  49:Core/Src/drv8301.c **** 
+  50:Core/Src/drv8301.c ****     HAL_StatusTypeDef ret = HAL_SPI_TransmitReceive_DMA(
+  72              		.loc 1 50 5 is_stmt 1 view .LVU13
+  51:Core/Src/drv8301.c ****         drv->hspi,
+  52:Core/Src/drv8301.c ****         (uint8_t *)&drv->tx_buf,
+  53:Core/Src/drv8301.c ****         (uint8_t *)&drv->rx_buf,
+  73              		.loc 1 53 20 is_stmt 0 view .LVU14
+  74 0014 2246     		mov	r2, r4
+  50:Core/Src/drv8301.c ****         drv->hspi,
+  75              		.loc 1 50 29 view .LVU15
+  76 0016 52F8140B 		ldr	r0, [r2], #20
+  77 001a 0123     		movs	r3, #1
+  78 001c 04F11201 		add	r1, r4, #18
+  79 0020 FFF7FEFF 		bl	HAL_SPI_TransmitReceive_DMA
+  80              	.LVL6:
+  54:Core/Src/drv8301.c ****         1
+  55:Core/Src/drv8301.c ****     );
+  56:Core/Src/drv8301.c **** 
+  57:Core/Src/drv8301.c ****     if (ret != HAL_OK)
+  81              		.loc 1 57 5 is_stmt 1 view .LVU16
+  82              		.loc 1 57 8 is_stmt 0 view .LVU17
+  83 0024 0746     		mov	r7, r0
+  84 0026 80B9     		cbnz	r0, .L7
+  58:Core/Src/drv8301.c ****     {
+  59:Core/Src/drv8301.c ****         DRV8301_CS_HIGH(drv);
+  60:Core/Src/drv8301.c ****         return ret;
+  61:Core/Src/drv8301.c ****     }
+  62:Core/Src/drv8301.c **** 
+  63:Core/Src/drv8301.c ****     uint32_t tick = HAL_GetTick();
+  85              		.loc 1 63 5 is_stmt 1 view .LVU18
+  86              		.loc 1 63 21 is_stmt 0 view .LVU19
+  87 0028 FFF7FEFF 		bl	HAL_GetTick
+  88              	.LVL7:
+  89              		.loc 1 63 21 view .LVU20
+  90 002c 0546     		mov	r5, r0
+  91              	.LVL8:
+  64:Core/Src/drv8301.c ****     while (!drv->dma_done)
+  92              		.loc 1 64 5 is_stmt 1 view .LVU21
+  93              	.L4:
+  94              		.loc 1 64 12 view .LVU22
+  95              		.loc 1 64 16 is_stmt 0 view .LVU23
+  96 002e A37D     		ldrb	r3, [r4, #22]	@ zero_extendqisi2
+  97              		.loc 1 64 12 view .LVU24
+  98 0030 93B9     		cbnz	r3, .L8
+  65:Core/Src/drv8301.c ****     {
+  66:Core/Src/drv8301.c ****         if ((HAL_GetTick() - tick) > DRV8301_SPI_TIMEOUT)
+  99              		.loc 1 66 9 is_stmt 1 view .LVU25
+ 100              		.loc 1 66 14 is_stmt 0 view .LVU26
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 4
+
+
+ 101 0032 FFF7FEFF 		bl	HAL_GetTick
+ 102              	.LVL9:
+ 103              		.loc 1 66 28 discriminator 1 view .LVU27
+ 104 0036 431B     		subs	r3, r0, r5
+ 105              		.loc 1 66 12 discriminator 1 view .LVU28
+ 106 0038 0A2B     		cmp	r3, #10
+ 107 003a F8D9     		bls	.L4
+  67:Core/Src/drv8301.c ****         {
+  68:Core/Src/drv8301.c ****             DRV8301_CS_HIGH(drv);
+ 108              		.loc 1 68 13 is_stmt 1 view .LVU29
+ 109              	.LVL10:
+ 110              	.LBB14:
+ 111              	.LBI14:
+  10:Core/Src/drv8301.c **** {
+ 112              		.loc 1 10 20 view .LVU30
+ 113              	.LBB15:
+  12:Core/Src/drv8301.c **** }
+ 114              		.loc 1 12 5 view .LVU31
+ 115 003c 0122     		movs	r2, #1
+ 116 003e 2189     		ldrh	r1, [r4, #8]
+ 117 0040 6068     		ldr	r0, [r4, #4]
+ 118 0042 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 119              	.LVL11:
+  12:Core/Src/drv8301.c **** }
+ 120              		.loc 1 12 5 is_stmt 0 view .LVU32
+ 121              	.LBE15:
+ 122              	.LBE14:
+  69:Core/Src/drv8301.c ****             return HAL_TIMEOUT;
+ 123              		.loc 1 69 13 is_stmt 1 view .LVU33
+ 124              		.loc 1 69 20 is_stmt 0 view .LVU34
+ 125 0046 0327     		movs	r7, #3
+ 126              	.LVL12:
+ 127              		.loc 1 69 20 view .LVU35
+ 128 0048 04E0     		b	.L3
+ 129              	.LVL13:
+ 130              	.L7:
+  59:Core/Src/drv8301.c ****         return ret;
+ 131              		.loc 1 59 9 is_stmt 1 view .LVU36
+ 132              	.LBB16:
+ 133              	.LBI16:
+  10:Core/Src/drv8301.c **** {
+ 134              		.loc 1 10 20 view .LVU37
+ 135              	.LBB17:
+  12:Core/Src/drv8301.c **** }
+ 136              		.loc 1 12 5 view .LVU38
+ 137 004a 0122     		movs	r2, #1
+ 138 004c 2189     		ldrh	r1, [r4, #8]
+ 139 004e 6068     		ldr	r0, [r4, #4]
+ 140              	.LVL14:
+  12:Core/Src/drv8301.c **** }
+ 141              		.loc 1 12 5 is_stmt 0 view .LVU39
+ 142 0050 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 143              	.LVL15:
+  12:Core/Src/drv8301.c **** }
+ 144              		.loc 1 12 5 view .LVU40
+ 145              	.LBE17:
+ 146              	.LBE16:
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 5
+
+
+  60:Core/Src/drv8301.c ****     }
+ 147              		.loc 1 60 9 is_stmt 1 view .LVU41
+ 148              	.L3:
+  70:Core/Src/drv8301.c ****         }
+  71:Core/Src/drv8301.c ****     }
+  72:Core/Src/drv8301.c **** 
+  73:Core/Src/drv8301.c ****     DRV8301_CS_HIGH(drv);
+  74:Core/Src/drv8301.c ****     *rx = drv->rx_buf;
+  75:Core/Src/drv8301.c ****     return HAL_OK;
+  76:Core/Src/drv8301.c **** }
+ 149              		.loc 1 76 1 is_stmt 0 view .LVU42
+ 150 0054 3846     		mov	r0, r7
+ 151 0056 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 152              	.LVL16:
+ 153              	.L8:
+  73:Core/Src/drv8301.c ****     *rx = drv->rx_buf;
+ 154              		.loc 1 73 5 is_stmt 1 view .LVU43
+ 155              	.LBB18:
+ 156              	.LBI18:
+  10:Core/Src/drv8301.c **** {
+ 157              		.loc 1 10 20 view .LVU44
+ 158              	.LBB19:
+  12:Core/Src/drv8301.c **** }
+ 159              		.loc 1 12 5 view .LVU45
+ 160 0058 0122     		movs	r2, #1
+ 161 005a 2189     		ldrh	r1, [r4, #8]
+ 162 005c 6068     		ldr	r0, [r4, #4]
+ 163 005e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 164              	.LVL17:
+  12:Core/Src/drv8301.c **** }
+ 165              		.loc 1 12 5 is_stmt 0 view .LVU46
+ 166              	.LBE19:
+ 167              	.LBE18:
+  74:Core/Src/drv8301.c ****     return HAL_OK;
+ 168              		.loc 1 74 5 is_stmt 1 view .LVU47
+  74:Core/Src/drv8301.c ****     return HAL_OK;
+ 169              		.loc 1 74 14 is_stmt 0 view .LVU48
+ 170 0062 A38A     		ldrh	r3, [r4, #20]
+  74:Core/Src/drv8301.c ****     return HAL_OK;
+ 171              		.loc 1 74 9 view .LVU49
+ 172 0064 3380     		strh	r3, [r6]	@ movhi
+  75:Core/Src/drv8301.c **** }
+ 173              		.loc 1 75 5 is_stmt 1 view .LVU50
+  75:Core/Src/drv8301.c **** }
+ 174              		.loc 1 75 12 is_stmt 0 view .LVU51
+ 175 0066 F5E7     		b	.L3
+ 176              		.cfi_endproc
+ 177              	.LFE139:
+ 179              		.section	.text.DRV8301_EnableGate,"ax",%progbits
+ 180              		.align	1
+ 181              		.global	DRV8301_EnableGate
+ 182              		.syntax unified
+ 183              		.thumb
+ 184              		.thumb_func
+ 186              	DRV8301_EnableGate:
+ 187              	.LVL18:
+ 188              	.LFB136:
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 6
+
+
+  18:Core/Src/drv8301.c ****     HAL_GPIO_WritePin(drv->EN_Port, drv->EN_Pin, GPIO_PIN_SET);
+ 189              		.loc 1 18 1 is_stmt 1 view -0
+ 190              		.cfi_startproc
+ 191              		@ args = 0, pretend = 0, frame = 0
+ 192              		@ frame_needed = 0, uses_anonymous_args = 0
+  18:Core/Src/drv8301.c ****     HAL_GPIO_WritePin(drv->EN_Port, drv->EN_Pin, GPIO_PIN_SET);
+ 193              		.loc 1 18 1 is_stmt 0 view .LVU53
+ 194 0000 08B5     		push	{r3, lr}
+ 195              	.LCFI1:
+ 196              		.cfi_def_cfa_offset 8
+ 197              		.cfi_offset 3, -8
+ 198              		.cfi_offset 14, -4
+  19:Core/Src/drv8301.c ****     HAL_Delay(1);   // cho charge pump ổn định
+ 199              		.loc 1 19 5 is_stmt 1 view .LVU54
+ 200 0002 0122     		movs	r2, #1
+ 201 0004 018A     		ldrh	r1, [r0, #16]
+ 202 0006 C068     		ldr	r0, [r0, #12]
+ 203              	.LVL19:
+  19:Core/Src/drv8301.c ****     HAL_Delay(1);   // cho charge pump ổn định
+ 204              		.loc 1 19 5 is_stmt 0 view .LVU55
+ 205 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 206              	.LVL20:
+  20:Core/Src/drv8301.c **** }
+ 207              		.loc 1 20 5 is_stmt 1 view .LVU56
+ 208 000c 0120     		movs	r0, #1
+ 209 000e FFF7FEFF 		bl	HAL_Delay
+ 210              	.LVL21:
+  21:Core/Src/drv8301.c **** 
+ 211              		.loc 1 21 1 is_stmt 0 view .LVU57
+ 212 0012 08BD     		pop	{r3, pc}
+ 213              		.cfi_endproc
+ 214              	.LFE136:
+ 216              		.section	.text.DRV8301_DisableGate,"ax",%progbits
+ 217              		.align	1
+ 218              		.global	DRV8301_DisableGate
+ 219              		.syntax unified
+ 220              		.thumb
+ 221              		.thumb_func
+ 223              	DRV8301_DisableGate:
+ 224              	.LVL22:
+ 225              	.LFB137:
+  24:Core/Src/drv8301.c ****     HAL_GPIO_WritePin(drv->EN_Port, drv->EN_Pin, GPIO_PIN_RESET);
+ 226              		.loc 1 24 1 is_stmt 1 view -0
+ 227              		.cfi_startproc
+ 228              		@ args = 0, pretend = 0, frame = 0
+ 229              		@ frame_needed = 0, uses_anonymous_args = 0
+  24:Core/Src/drv8301.c ****     HAL_GPIO_WritePin(drv->EN_Port, drv->EN_Pin, GPIO_PIN_RESET);
+ 230              		.loc 1 24 1 is_stmt 0 view .LVU59
+ 231 0000 08B5     		push	{r3, lr}
+ 232              	.LCFI2:
+ 233              		.cfi_def_cfa_offset 8
+ 234              		.cfi_offset 3, -8
+ 235              		.cfi_offset 14, -4
+  25:Core/Src/drv8301.c **** }
+ 236              		.loc 1 25 5 is_stmt 1 view .LVU60
+ 237 0002 0022     		movs	r2, #0
+ 238 0004 018A     		ldrh	r1, [r0, #16]
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 7
+
+
+ 239 0006 C068     		ldr	r0, [r0, #12]
+ 240              	.LVL23:
+  25:Core/Src/drv8301.c **** }
+ 241              		.loc 1 25 5 is_stmt 0 view .LVU61
+ 242 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 243              	.LVL24:
+  26:Core/Src/drv8301.c **** 
+ 244              		.loc 1 26 1 view .LVU62
+ 245 000c 08BD     		pop	{r3, pc}
+ 246              		.cfi_endproc
+ 247              	.LFE137:
+ 249              		.section	.text.DRV8301_Init,"ax",%progbits
+ 250              		.align	1
+ 251              		.global	DRV8301_Init
+ 252              		.syntax unified
+ 253              		.thumb
+ 254              		.thumb_func
+ 256              	DRV8301_Init:
+ 257              	.LVL25:
+ 258              	.LFB138:
+  31:Core/Src/drv8301.c ****     DRV8301_CS_HIGH(drv);
+ 259              		.loc 1 31 1 is_stmt 1 view -0
+ 260              		.cfi_startproc
+ 261              		@ args = 0, pretend = 0, frame = 0
+ 262              		@ frame_needed = 0, uses_anonymous_args = 0
+  31:Core/Src/drv8301.c ****     DRV8301_CS_HIGH(drv);
+ 263              		.loc 1 31 1 is_stmt 0 view .LVU64
+ 264 0000 10B5     		push	{r4, lr}
+ 265              	.LCFI3:
+ 266              		.cfi_def_cfa_offset 8
+ 267              		.cfi_offset 4, -8
+ 268              		.cfi_offset 14, -4
+ 269 0002 0446     		mov	r4, r0
+  32:Core/Src/drv8301.c ****     DRV8301_DisableGate(drv);   // an toàn khi init
+ 270              		.loc 1 32 5 is_stmt 1 view .LVU65
+ 271              	.LVL26:
+ 272              	.LBB20:
+ 273              	.LBI20:
+  10:Core/Src/drv8301.c **** {
+ 274              		.loc 1 10 20 view .LVU66
+ 275              	.LBB21:
+  12:Core/Src/drv8301.c **** }
+ 276              		.loc 1 12 5 view .LVU67
+ 277 0004 0122     		movs	r2, #1
+ 278 0006 0189     		ldrh	r1, [r0, #8]
+ 279 0008 4068     		ldr	r0, [r0, #4]
+ 280              	.LVL27:
+  12:Core/Src/drv8301.c **** }
+ 281              		.loc 1 12 5 is_stmt 0 view .LVU68
+ 282 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 283              	.LVL28:
+  12:Core/Src/drv8301.c **** }
+ 284              		.loc 1 12 5 view .LVU69
+ 285              	.LBE21:
+ 286              	.LBE20:
+  33:Core/Src/drv8301.c ****     drv->dma_done = 0;
+ 287              		.loc 1 33 5 is_stmt 1 view .LVU70
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 8
+
+
+ 288 000e 2046     		mov	r0, r4
+ 289 0010 FFF7FEFF 		bl	DRV8301_DisableGate
+ 290              	.LVL29:
+  34:Core/Src/drv8301.c **** }
+ 291              		.loc 1 34 5 view .LVU71
+  34:Core/Src/drv8301.c **** }
+ 292              		.loc 1 34 19 is_stmt 0 view .LVU72
+ 293 0014 0023     		movs	r3, #0
+ 294 0016 A375     		strb	r3, [r4, #22]
+  35:Core/Src/drv8301.c **** 
+ 295              		.loc 1 35 1 view .LVU73
+ 296 0018 10BD     		pop	{r4, pc}
+  35:Core/Src/drv8301.c **** 
+ 297              		.loc 1 35 1 view .LVU74
+ 298              		.cfi_endproc
+ 299              	.LFE138:
+ 301              		.section	.text.DRV8301_WriteReg,"ax",%progbits
+ 302              		.align	1
+ 303              		.global	DRV8301_WriteReg
+ 304              		.syntax unified
+ 305              		.thumb
+ 306              		.thumb_func
+ 308              	DRV8301_WriteReg:
+ 309              	.LVL30:
+ 310              	.LFB141:
+  77:Core/Src/drv8301.c **** HAL_StatusTypeDef DRV8301_Configure(
+  78:Core/Src/drv8301.c ****     DRV8301_HandleTypeDef *drv,
+  79:Core/Src/drv8301.c ****     DRV8301_Config_t *cfg
+  80:Core/Src/drv8301.c **** )
+  81:Core/Src/drv8301.c **** {
+  82:Core/Src/drv8301.c ****     uint16_t ctrl1 = 0;
+  83:Core/Src/drv8301.c ****     uint16_t ctrl2 = 0;
+  84:Core/Src/drv8301.c **** 
+  85:Core/Src/drv8301.c ****     /* CONTROL1 */
+  86:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->pwm_mode & 0x03) << 7);
+  87:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->oc_mode  & 0x03) << 5);
+  88:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->csa_gain & 0x07) << 2);
+  89:Core/Src/drv8301.c **** 
+  90:Core/Src/drv8301.c ****     /* CONTROL2: để mặc định an toàn */
+  91:Core/Src/drv8301.c ****     ctrl2 = 0x000;
+  92:Core/Src/drv8301.c **** 
+  93:Core/Src/drv8301.c ****     HAL_StatusTypeDef ret;
+  94:Core/Src/drv8301.c ****     ret = DRV8301_WriteReg(drv, DRV8301_REG_CONTROL_1, ctrl1);
+  95:Core/Src/drv8301.c ****     if (ret != HAL_OK) return ret;
+  96:Core/Src/drv8301.c **** 
+  97:Core/Src/drv8301.c ****     ret = DRV8301_WriteReg(drv, DRV8301_REG_CONTROL_2, ctrl2);
+  98:Core/Src/drv8301.c ****     return ret;
+  99:Core/Src/drv8301.c **** }
+ 100:Core/Src/drv8301.c **** 
+ 101:Core/Src/drv8301.c **** /* ================== WRITE ======================= */
+ 102:Core/Src/drv8301.c **** 
+ 103:Core/Src/drv8301.c **** HAL_StatusTypeDef DRV8301_WriteReg(
+ 104:Core/Src/drv8301.c ****     DRV8301_HandleTypeDef *drv,
+ 105:Core/Src/drv8301.c ****     uint8_t reg,
+ 106:Core/Src/drv8301.c ****     uint16_t data
+ 107:Core/Src/drv8301.c **** )
+ 108:Core/Src/drv8301.c **** {
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 9
+
+
+ 311              		.loc 1 108 1 is_stmt 1 view -0
+ 312              		.cfi_startproc
+ 313              		@ args = 0, pretend = 0, frame = 8
+ 314              		@ frame_needed = 0, uses_anonymous_args = 0
+ 315              		.loc 1 108 1 is_stmt 0 view .LVU76
+ 316 0000 00B5     		push	{lr}
+ 317              	.LCFI4:
+ 318              		.cfi_def_cfa_offset 4
+ 319              		.cfi_offset 14, -4
+ 320 0002 83B0     		sub	sp, sp, #12
+ 321              	.LCFI5:
+ 322              		.cfi_def_cfa_offset 16
+ 109:Core/Src/drv8301.c ****     uint16_t frame = (0 << 15) |
+ 323              		.loc 1 109 5 is_stmt 1 view .LVU77
+ 324              		.loc 1 109 32 is_stmt 0 view .LVU78
+ 325 0004 C902     		lsls	r1, r1, #11
+ 326              	.LVL31:
+ 327              		.loc 1 109 32 view .LVU79
+ 328 0006 01F46053 		and	r3, r1, #14336
+ 329              		.loc 1 109 14 view .LVU80
+ 330 000a C2F30A01 		ubfx	r1, r2, #0, #11
+ 331              	.LVL32:
+ 110:Core/Src/drv8301.c ****                      ((reg & 0x07) << 11) |
+ 111:Core/Src/drv8301.c ****                      (data & 0x07FF);
+ 112:Core/Src/drv8301.c **** 
+ 113:Core/Src/drv8301.c ****     uint16_t dummy;
+ 332              		.loc 1 113 5 is_stmt 1 view .LVU81
+ 114:Core/Src/drv8301.c ****     return DRV8301_TransferDMA(drv, frame, &dummy);
+ 333              		.loc 1 114 5 view .LVU82
+ 334              		.loc 1 114 12 is_stmt 0 view .LVU83
+ 335 000e 0DF10602 		add	r2, sp, #6
+ 336              	.LVL33:
+ 337              		.loc 1 114 12 view .LVU84
+ 338 0012 1943     		orrs	r1, r1, r3
+ 339              	.LVL34:
+ 340              		.loc 1 114 12 view .LVU85
+ 341 0014 FFF7FEFF 		bl	DRV8301_TransferDMA
+ 342              	.LVL35:
+ 115:Core/Src/drv8301.c **** }
+ 343              		.loc 1 115 1 view .LVU86
+ 344 0018 03B0     		add	sp, sp, #12
+ 345              	.LCFI6:
+ 346              		.cfi_def_cfa_offset 4
+ 347              		@ sp needed
+ 348 001a 5DF804FB 		ldr	pc, [sp], #4
+ 349              		.cfi_endproc
+ 350              	.LFE141:
+ 352              		.section	.text.DRV8301_Configure,"ax",%progbits
+ 353              		.align	1
+ 354              		.global	DRV8301_Configure
+ 355              		.syntax unified
+ 356              		.thumb
+ 357              		.thumb_func
+ 359              	DRV8301_Configure:
+ 360              	.LVL36:
+ 361              	.LFB140:
+  81:Core/Src/drv8301.c ****     uint16_t ctrl1 = 0;
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 10
+
+
+ 362              		.loc 1 81 1 is_stmt 1 view -0
+ 363              		.cfi_startproc
+ 364              		@ args = 0, pretend = 0, frame = 0
+ 365              		@ frame_needed = 0, uses_anonymous_args = 0
+  81:Core/Src/drv8301.c ****     uint16_t ctrl1 = 0;
+ 366              		.loc 1 81 1 is_stmt 0 view .LVU88
+ 367 0000 10B5     		push	{r4, lr}
+ 368              	.LCFI7:
+ 369              		.cfi_def_cfa_offset 8
+ 370              		.cfi_offset 4, -8
+ 371              		.cfi_offset 14, -4
+ 372 0002 0446     		mov	r4, r0
+  82:Core/Src/drv8301.c ****     uint16_t ctrl2 = 0;
+ 373              		.loc 1 82 5 is_stmt 1 view .LVU89
+ 374              	.LVL37:
+  83:Core/Src/drv8301.c **** 
+ 375              		.loc 1 83 5 view .LVU90
+  86:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->oc_mode  & 0x03) << 5);
+ 376              		.loc 1 86 5 view .LVU91
+  86:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->oc_mode  & 0x03) << 5);
+ 377              		.loc 1 86 19 is_stmt 0 view .LVU92
+ 378 0004 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  86:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->oc_mode  & 0x03) << 5);
+ 379              		.loc 1 86 38 view .LVU93
+ 380 0006 DB01     		lsls	r3, r3, #7
+ 381 0008 03F4C073 		and	r3, r3, #384
+ 382              	.LVL38:
+  87:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->csa_gain & 0x07) << 2);
+ 383              		.loc 1 87 5 is_stmt 1 view .LVU94
+  87:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->csa_gain & 0x07) << 2);
+ 384              		.loc 1 87 19 is_stmt 0 view .LVU95
+ 385 000c 4A78     		ldrb	r2, [r1, #1]	@ zero_extendqisi2
+  87:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->csa_gain & 0x07) << 2);
+ 386              		.loc 1 87 38 view .LVU96
+ 387 000e 5201     		lsls	r2, r2, #5
+ 388 0010 02F06002 		and	r2, r2, #96
+  87:Core/Src/drv8301.c ****     ctrl1 |= ((cfg->csa_gain & 0x07) << 2);
+ 389              		.loc 1 87 11 view .LVU97
+ 390 0014 1343     		orrs	r3, r3, r2
+ 391              	.LVL39:
+  88:Core/Src/drv8301.c **** 
+ 392              		.loc 1 88 5 is_stmt 1 view .LVU98
+  88:Core/Src/drv8301.c **** 
+ 393              		.loc 1 88 19 is_stmt 0 view .LVU99
+ 394 0016 8A78     		ldrb	r2, [r1, #2]	@ zero_extendqisi2
+  88:Core/Src/drv8301.c **** 
+ 395              		.loc 1 88 38 view .LVU100
+ 396 0018 9200     		lsls	r2, r2, #2
+ 397 001a 02F01C02 		and	r2, r2, #28
+ 398              	.LVL40:
+  91:Core/Src/drv8301.c **** 
+ 399              		.loc 1 91 5 is_stmt 1 view .LVU101
+  93:Core/Src/drv8301.c ****     ret = DRV8301_WriteReg(drv, DRV8301_REG_CONTROL_1, ctrl1);
+ 400              		.loc 1 93 5 view .LVU102
+  94:Core/Src/drv8301.c ****     if (ret != HAL_OK) return ret;
+ 401              		.loc 1 94 5 view .LVU103
+  94:Core/Src/drv8301.c ****     if (ret != HAL_OK) return ret;
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 11
+
+
+ 402              		.loc 1 94 11 is_stmt 0 view .LVU104
+ 403 001e 1A43     		orrs	r2, r2, r3
+ 404              	.LVL41:
+  94:Core/Src/drv8301.c ****     if (ret != HAL_OK) return ret;
+ 405              		.loc 1 94 11 view .LVU105
+ 406 0020 0221     		movs	r1, #2
+ 407              	.LVL42:
+  94:Core/Src/drv8301.c ****     if (ret != HAL_OK) return ret;
+ 408              		.loc 1 94 11 view .LVU106
+ 409 0022 FFF7FEFF 		bl	DRV8301_WriteReg
+ 410              	.LVL43:
+  95:Core/Src/drv8301.c **** 
+ 411              		.loc 1 95 5 is_stmt 1 view .LVU107
+  95:Core/Src/drv8301.c **** 
+ 412              		.loc 1 95 8 is_stmt 0 view .LVU108
+ 413 0026 00B1     		cbz	r0, .L20
+ 414              	.LVL44:
+ 415              	.L18:
+  99:Core/Src/drv8301.c **** 
+ 416              		.loc 1 99 1 view .LVU109
+ 417 0028 10BD     		pop	{r4, pc}
+ 418              	.LVL45:
+ 419              	.L20:
+  97:Core/Src/drv8301.c ****     return ret;
+ 420              		.loc 1 97 5 is_stmt 1 view .LVU110
+  97:Core/Src/drv8301.c ****     return ret;
+ 421              		.loc 1 97 11 is_stmt 0 view .LVU111
+ 422 002a 0022     		movs	r2, #0
+ 423 002c 0321     		movs	r1, #3
+ 424 002e 2046     		mov	r0, r4
+ 425 0030 FFF7FEFF 		bl	DRV8301_WriteReg
+ 426              	.LVL46:
+  98:Core/Src/drv8301.c **** }
+ 427              		.loc 1 98 5 is_stmt 1 view .LVU112
+  98:Core/Src/drv8301.c **** }
+ 428              		.loc 1 98 12 is_stmt 0 view .LVU113
+ 429 0034 F8E7     		b	.L18
+ 430              		.cfi_endproc
+ 431              	.LFE140:
+ 433              		.section	.text.DRV8301_ReadReg,"ax",%progbits
+ 434              		.align	1
+ 435              		.global	DRV8301_ReadReg
+ 436              		.syntax unified
+ 437              		.thumb
+ 438              		.thumb_func
+ 440              	DRV8301_ReadReg:
+ 441              	.LVL47:
+ 442              	.LFB142:
+ 116:Core/Src/drv8301.c **** 
+ 117:Core/Src/drv8301.c **** /* ================== READ ======================== */
+ 118:Core/Src/drv8301.c **** 
+ 119:Core/Src/drv8301.c **** HAL_StatusTypeDef DRV8301_ReadReg(
+ 120:Core/Src/drv8301.c ****     DRV8301_HandleTypeDef *drv,
+ 121:Core/Src/drv8301.c ****     uint8_t reg,
+ 122:Core/Src/drv8301.c ****     uint16_t *data
+ 123:Core/Src/drv8301.c **** )
+ 124:Core/Src/drv8301.c **** {
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 12
+
+
+ 443              		.loc 1 124 1 is_stmt 1 view -0
+ 444              		.cfi_startproc
+ 445              		@ args = 0, pretend = 0, frame = 8
+ 446              		@ frame_needed = 0, uses_anonymous_args = 0
+ 447              		.loc 1 124 1 is_stmt 0 view .LVU115
+ 448 0000 10B5     		push	{r4, lr}
+ 449              	.LCFI8:
+ 450              		.cfi_def_cfa_offset 8
+ 451              		.cfi_offset 4, -8
+ 452              		.cfi_offset 14, -4
+ 453 0002 82B0     		sub	sp, sp, #8
+ 454              	.LCFI9:
+ 455              		.cfi_def_cfa_offset 16
+ 456 0004 1446     		mov	r4, r2
+ 125:Core/Src/drv8301.c ****     uint16_t frame = (1 << 15) | ((reg & 0x07) << 11);
+ 457              		.loc 1 125 5 is_stmt 1 view .LVU116
+ 458              		.loc 1 125 48 is_stmt 0 view .LVU117
+ 459 0006 C902     		lsls	r1, r1, #11
+ 460              	.LVL48:
+ 461              		.loc 1 125 48 view .LVU118
+ 462 0008 01F46051 		and	r1, r1, #14336
+ 463              	.LVL49:
+ 126:Core/Src/drv8301.c ****     uint16_t rx;
+ 464              		.loc 1 126 5 is_stmt 1 view .LVU119
+ 127:Core/Src/drv8301.c **** 
+ 128:Core/Src/drv8301.c ****     HAL_StatusTypeDef ret = DRV8301_TransferDMA(drv, frame, &rx);
+ 465              		.loc 1 128 5 view .LVU120
+ 466              		.loc 1 128 29 is_stmt 0 view .LVU121
+ 467 000c 0DF10602 		add	r2, sp, #6
+ 468              	.LVL50:
+ 469              		.loc 1 128 29 view .LVU122
+ 470 0010 41F40041 		orr	r1, r1, #32768
+ 471              	.LVL51:
+ 472              		.loc 1 128 29 view .LVU123
+ 473 0014 FFF7FEFF 		bl	DRV8301_TransferDMA
+ 474              	.LVL52:
+ 129:Core/Src/drv8301.c ****     if (ret == HAL_OK)
+ 475              		.loc 1 129 5 is_stmt 1 view .LVU124
+ 476              		.loc 1 129 8 is_stmt 0 view .LVU125
+ 477 0018 20B9     		cbnz	r0, .L22
+ 130:Core/Src/drv8301.c ****     {
+ 131:Core/Src/drv8301.c ****         *data = rx & 0x07FF;
+ 478              		.loc 1 131 9 is_stmt 1 view .LVU126
+ 479              		.loc 1 131 20 is_stmt 0 view .LVU127
+ 480 001a BDF80630 		ldrh	r3, [sp, #6]
+ 481 001e C3F30A03 		ubfx	r3, r3, #0, #11
+ 482              		.loc 1 131 15 view .LVU128
+ 483 0022 2380     		strh	r3, [r4]	@ movhi
+ 484              	.L22:
+ 132:Core/Src/drv8301.c ****     }
+ 133:Core/Src/drv8301.c ****     return ret;
+ 485              		.loc 1 133 5 is_stmt 1 view .LVU129
+ 134:Core/Src/drv8301.c **** }
+ 486              		.loc 1 134 1 is_stmt 0 view .LVU130
+ 487 0024 02B0     		add	sp, sp, #8
+ 488              	.LCFI10:
+ 489              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 13
+
+
+ 490              		@ sp needed
+ 491 0026 10BD     		pop	{r4, pc}
+ 492              		.loc 1 134 1 view .LVU131
+ 493              		.cfi_endproc
+ 494              	.LFE142:
+ 496              		.section	.text.DRV8301_TxRxCpltCallback,"ax",%progbits
+ 497              		.align	1
+ 498              		.global	DRV8301_TxRxCpltCallback
+ 499              		.syntax unified
+ 500              		.thumb
+ 501              		.thumb_func
+ 503              	DRV8301_TxRxCpltCallback:
+ 504              	.LVL53:
+ 505              	.LFB143:
+ 135:Core/Src/drv8301.c **** 
+ 136:Core/Src/drv8301.c **** /* ================== DMA CALLBACK ================ */
+ 137:Core/Src/drv8301.c **** 
+ 138:Core/Src/drv8301.c **** void DRV8301_TxRxCpltCallback(DRV8301_HandleTypeDef *drv)
+ 139:Core/Src/drv8301.c **** {
+ 506              		.loc 1 139 1 is_stmt 1 view -0
+ 507              		.cfi_startproc
+ 508              		@ args = 0, pretend = 0, frame = 0
+ 509              		@ frame_needed = 0, uses_anonymous_args = 0
+ 510              		@ link register save eliminated.
+ 140:Core/Src/drv8301.c ****     drv->dma_done = 1;
+ 511              		.loc 1 140 5 view .LVU133
+ 512              		.loc 1 140 19 is_stmt 0 view .LVU134
+ 513 0000 0123     		movs	r3, #1
+ 514 0002 8375     		strb	r3, [r0, #22]
+ 141:Core/Src/drv8301.c **** }
+ 515              		.loc 1 141 1 view .LVU135
+ 516 0004 7047     		bx	lr
+ 517              		.cfi_endproc
+ 518              	.LFE143:
+ 520              		.text
+ 521              	.Letext0:
+ 522              		.file 2 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 523              		.file 3 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 524              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 525              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 526              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 527              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 528              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h"
+ 529              		.file 9 "Core/Inc/drv8301.h"
+ 530              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 drv8301.c
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:21     .text.DRV8301_TransferDMA:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:26     .text.DRV8301_TransferDMA:00000000 DRV8301_TransferDMA
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:180    .text.DRV8301_EnableGate:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:186    .text.DRV8301_EnableGate:00000000 DRV8301_EnableGate
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:217    .text.DRV8301_DisableGate:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:223    .text.DRV8301_DisableGate:00000000 DRV8301_DisableGate
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:250    .text.DRV8301_Init:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:256    .text.DRV8301_Init:00000000 DRV8301_Init
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:302    .text.DRV8301_WriteReg:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:308    .text.DRV8301_WriteReg:00000000 DRV8301_WriteReg
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:353    .text.DRV8301_Configure:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:359    .text.DRV8301_Configure:00000000 DRV8301_Configure
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:434    .text.DRV8301_ReadReg:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:440    .text.DRV8301_ReadReg:00000000 DRV8301_ReadReg
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:497    .text.DRV8301_TxRxCpltCallback:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccaDw4jN.s:503    .text.DRV8301_TxRxCpltCallback:00000000 DRV8301_TxRxCpltCallback
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_SPI_TransmitReceive_DMA
+HAL_GetTick
+HAL_Delay

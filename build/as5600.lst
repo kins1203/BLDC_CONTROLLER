@@ -1,0 +1,385 @@
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"as5600.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/as5600.c"
+  20              		.section	.text.AS5600_Init,"ax",%progbits
+  21              		.align	1
+  22              		.global	AS5600_Init
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	AS5600_Init:
+  28              	.LVL0:
+  29              	.LFB134:
+   1:Core/Src/as5600.c **** #include "as5600.h"
+   2:Core/Src/as5600.c **** #include <math.h>
+   3:Core/Src/as5600.c **** 
+   4:Core/Src/as5600.c **** HAL_StatusTypeDef AS5600_Init(AS5600_Handle_t *h, I2C_HandleTypeDef *hi2c)
+   5:Core/Src/as5600.c **** {
+  30              		.loc 1 5 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+   6:Core/Src/as5600.c ****     if (h == NULL || hi2c == NULL)
+  35              		.loc 1 6 5 view .LVU1
+  36              		.loc 1 6 8 is_stmt 0 view .LVU2
+  37 0000 0346     		mov	r3, r0
+  38 0002 38B1     		cbz	r0, .L3
+  39              		.loc 1 6 19 discriminator 1 view .LVU3
+  40 0004 41B1     		cbz	r1, .L4
+   7:Core/Src/as5600.c ****         return HAL_ERROR;
+   8:Core/Src/as5600.c **** 
+   9:Core/Src/as5600.c ****     h->hi2c = hi2c;
+  41              		.loc 1 9 5 is_stmt 1 view .LVU4
+  42              		.loc 1 9 13 is_stmt 0 view .LVU5
+  43 0006 0160     		str	r1, [r0]
+  10:Core/Src/as5600.c ****     h->raw_angle = 0;
+  44              		.loc 1 10 5 is_stmt 1 view .LVU6
+  45              		.loc 1 10 18 is_stmt 0 view .LVU7
+  46 0008 0020     		movs	r0, #0
+  47              	.LVL1:
+  48              		.loc 1 10 18 view .LVU8
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s 			page 2
+
+
+  49 000a 9880     		strh	r0, [r3, #4]	@ movhi
+  11:Core/Src/as5600.c ****     h->angle_deg = 0.0f;
+  50              		.loc 1 11 5 is_stmt 1 view .LVU9
+  51              		.loc 1 11 18 is_stmt 0 view .LVU10
+  52 000c 0022     		movs	r2, #0
+  53 000e 9A60     		str	r2, [r3, #8]	@ float
+  12:Core/Src/as5600.c ****     h->angle_rad = 0.0f;
+  54              		.loc 1 12 5 is_stmt 1 view .LVU11
+  55              		.loc 1 12 18 is_stmt 0 view .LVU12
+  56 0010 DA60     		str	r2, [r3, #12]	@ float
+  13:Core/Src/as5600.c **** 
+  14:Core/Src/as5600.c ****     return HAL_OK;
+  57              		.loc 1 14 5 is_stmt 1 view .LVU13
+  58              		.loc 1 14 12 is_stmt 0 view .LVU14
+  59 0012 7047     		bx	lr
+  60              	.LVL2:
+  61              	.L3:
+   7:Core/Src/as5600.c **** 
+  62              		.loc 1 7 16 view .LVU15
+  63 0014 0120     		movs	r0, #1
+  64              	.LVL3:
+   7:Core/Src/as5600.c **** 
+  65              		.loc 1 7 16 view .LVU16
+  66 0016 7047     		bx	lr
+  67              	.LVL4:
+  68              	.L4:
+   7:Core/Src/as5600.c **** 
+  69              		.loc 1 7 16 view .LVU17
+  70 0018 0120     		movs	r0, #1
+  71              	.LVL5:
+  15:Core/Src/as5600.c **** }
+  72              		.loc 1 15 1 view .LVU18
+  73 001a 7047     		bx	lr
+  74              		.cfi_endproc
+  75              	.LFE134:
+  77              		.section	.text.AS5600_ReadRaw,"ax",%progbits
+  78              		.align	1
+  79              		.global	AS5600_ReadRaw
+  80              		.syntax unified
+  81              		.thumb
+  82              		.thumb_func
+  84              	AS5600_ReadRaw:
+  85              	.LVL6:
+  86              	.LFB135:
+  16:Core/Src/as5600.c **** 
+  17:Core/Src/as5600.c **** /* đọc raw angle 12-bit */
+  18:Core/Src/as5600.c **** HAL_StatusTypeDef AS5600_ReadRaw(AS5600_Handle_t *h)
+  19:Core/Src/as5600.c **** {
+  87              		.loc 1 19 1 is_stmt 1 view -0
+  88              		.cfi_startproc
+  89              		@ args = 0, pretend = 0, frame = 8
+  90              		@ frame_needed = 0, uses_anonymous_args = 0
+  91              		.loc 1 19 1 is_stmt 0 view .LVU20
+  92 0000 10B5     		push	{r4, lr}
+  93              	.LCFI0:
+  94              		.cfi_def_cfa_offset 8
+  95              		.cfi_offset 4, -8
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s 			page 3
+
+
+  96              		.cfi_offset 14, -4
+  97 0002 86B0     		sub	sp, sp, #24
+  98              	.LCFI1:
+  99              		.cfi_def_cfa_offset 32
+ 100 0004 0446     		mov	r4, r0
+  20:Core/Src/as5600.c ****     uint8_t buf[2];
+ 101              		.loc 1 20 5 is_stmt 1 view .LVU21
+  21:Core/Src/as5600.c **** 
+  22:Core/Src/as5600.c ****     if (HAL_I2C_Mem_Read(h->hi2c,
+ 102              		.loc 1 22 5 view .LVU22
+ 103              		.loc 1 22 9 is_stmt 0 view .LVU23
+ 104 0006 4FF0FF33 		mov	r3, #-1
+ 105 000a 0293     		str	r3, [sp, #8]
+ 106 000c 0223     		movs	r3, #2
+ 107 000e 0193     		str	r3, [sp, #4]
+ 108 0010 05AB     		add	r3, sp, #20
+ 109 0012 0093     		str	r3, [sp]
+ 110 0014 0123     		movs	r3, #1
+ 111 0016 0E22     		movs	r2, #14
+ 112 0018 6C21     		movs	r1, #108
+ 113 001a 0068     		ldr	r0, [r0]
+ 114              	.LVL7:
+ 115              		.loc 1 22 9 view .LVU24
+ 116 001c FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 117              	.LVL8:
+ 118              		.loc 1 22 8 discriminator 1 view .LVU25
+ 119 0020 50B9     		cbnz	r0, .L7
+  23:Core/Src/as5600.c ****                           AS5600_I2C_ADDR,
+  24:Core/Src/as5600.c ****                           AS5600_RAW_ANGLE_MSB,
+  25:Core/Src/as5600.c ****                           I2C_MEMADD_SIZE_8BIT,
+  26:Core/Src/as5600.c ****                           buf,
+  27:Core/Src/as5600.c ****                           2,
+  28:Core/Src/as5600.c ****                           HAL_MAX_DELAY) != HAL_OK)
+  29:Core/Src/as5600.c ****     {
+  30:Core/Src/as5600.c ****         return HAL_ERROR;
+  31:Core/Src/as5600.c ****     }
+  32:Core/Src/as5600.c **** 
+  33:Core/Src/as5600.c ****     h->raw_angle = (((uint16_t)buf[0] << 8) | buf[1]) & 0x0FFF;
+ 120              		.loc 1 33 5 is_stmt 1 view .LVU26
+ 121              		.loc 1 33 35 is_stmt 0 view .LVU27
+ 122 0022 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 123              		.loc 1 33 50 view .LVU28
+ 124 0026 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+ 125              		.loc 1 33 45 view .LVU29
+ 126 002a 43EA0223 		orr	r3, r3, r2, lsl #8
+ 127              		.loc 1 33 55 view .LVU30
+ 128 002e C3F30B03 		ubfx	r3, r3, #0, #12
+ 129              		.loc 1 33 18 view .LVU31
+ 130 0032 A380     		strh	r3, [r4, #4]	@ movhi
+  34:Core/Src/as5600.c **** 
+  35:Core/Src/as5600.c ****     return HAL_OK;
+ 131              		.loc 1 35 5 is_stmt 1 view .LVU32
+ 132              	.L6:
+  36:Core/Src/as5600.c **** }
+ 133              		.loc 1 36 1 is_stmt 0 view .LVU33
+ 134 0034 06B0     		add	sp, sp, #24
+ 135              	.LCFI2:
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s 			page 4
+
+
+ 136              		.cfi_remember_state
+ 137              		.cfi_def_cfa_offset 8
+ 138              		@ sp needed
+ 139 0036 10BD     		pop	{r4, pc}
+ 140              	.LVL9:
+ 141              	.L7:
+ 142              	.LCFI3:
+ 143              		.cfi_restore_state
+  30:Core/Src/as5600.c ****     }
+ 144              		.loc 1 30 16 view .LVU34
+ 145 0038 0120     		movs	r0, #1
+ 146 003a FBE7     		b	.L6
+ 147              		.cfi_endproc
+ 148              	.LFE135:
+ 150              		.section	.text.AS5600_GetAngleDeg,"ax",%progbits
+ 151              		.align	1
+ 152              		.global	AS5600_GetAngleDeg
+ 153              		.syntax unified
+ 154              		.thumb
+ 155              		.thumb_func
+ 157              	AS5600_GetAngleDeg:
+ 158              	.LVL10:
+ 159              	.LFB136:
+  37:Core/Src/as5600.c **** 
+  38:Core/Src/as5600.c **** /* góc độ */
+  39:Core/Src/as5600.c **** float AS5600_GetAngleDeg(AS5600_Handle_t *h)
+  40:Core/Src/as5600.c **** {
+ 160              		.loc 1 40 1 is_stmt 1 view -0
+ 161              		.cfi_startproc
+ 162              		@ args = 0, pretend = 0, frame = 0
+ 163              		@ frame_needed = 0, uses_anonymous_args = 0
+ 164              		.loc 1 40 1 is_stmt 0 view .LVU36
+ 165 0000 10B5     		push	{r4, lr}
+ 166              	.LCFI4:
+ 167              		.cfi_def_cfa_offset 8
+ 168              		.cfi_offset 4, -8
+ 169              		.cfi_offset 14, -4
+ 170 0002 0446     		mov	r4, r0
+  41:Core/Src/as5600.c ****     if (AS5600_ReadRaw(h) != HAL_OK)
+ 171              		.loc 1 41 5 is_stmt 1 view .LVU37
+ 172              		.loc 1 41 9 is_stmt 0 view .LVU38
+ 173 0004 FFF7FEFF 		bl	AS5600_ReadRaw
+ 174              	.LVL11:
+ 175              		.loc 1 41 8 discriminator 1 view .LVU39
+ 176 0008 78B9     		cbnz	r0, .L13
+  42:Core/Src/as5600.c ****         return h->angle_deg;
+  43:Core/Src/as5600.c **** 
+  44:Core/Src/as5600.c ****     h->angle_deg = (h->raw_angle * 360.0f) / 4096.0f;
+ 177              		.loc 1 44 5 is_stmt 1 view .LVU40
+ 178              		.loc 1 44 22 is_stmt 0 view .LVU41
+ 179 000a A388     		ldrh	r3, [r4, #4]
+ 180 000c 00EE103A 		vmov	s0, r3	@ int
+ 181              		.loc 1 44 34 view .LVU42
+ 182 0010 B8EEC00A 		vcvt.f32.s32	s0, s0
+ 183 0014 DFED067A 		vldr.32	s15, .L14
+ 184 0018 20EE270A 		vmul.f32	s0, s0, s15
+ 185              		.loc 1 44 44 view .LVU43
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s 			page 5
+
+
+ 186 001c DFED057A 		vldr.32	s15, .L14+4
+ 187 0020 20EE270A 		vmul.f32	s0, s0, s15
+ 188              		.loc 1 44 18 view .LVU44
+ 189 0024 84ED020A 		vstr.32	s0, [r4, #8]
+  45:Core/Src/as5600.c ****     return h->angle_deg;
+ 190              		.loc 1 45 5 is_stmt 1 view .LVU45
+ 191              	.L9:
+  46:Core/Src/as5600.c **** }
+ 192              		.loc 1 46 1 is_stmt 0 view .LVU46
+ 193 0028 10BD     		pop	{r4, pc}
+ 194              	.LVL12:
+ 195              	.L13:
+  42:Core/Src/as5600.c ****         return h->angle_deg;
+ 196              		.loc 1 42 9 is_stmt 1 view .LVU47
+  42:Core/Src/as5600.c ****         return h->angle_deg;
+ 197              		.loc 1 42 17 is_stmt 0 view .LVU48
+ 198 002a 94ED020A 		vldr.32	s0, [r4, #8]
+ 199 002e FBE7     		b	.L9
+ 200              	.L15:
+ 201              		.align	2
+ 202              	.L14:
+ 203 0030 0000B443 		.word	1135869952
+ 204 0034 00008039 		.word	964689920
+ 205              		.cfi_endproc
+ 206              	.LFE136:
+ 208              		.section	.text.AS5600_GetAngleRad,"ax",%progbits
+ 209              		.align	1
+ 210              		.global	AS5600_GetAngleRad
+ 211              		.syntax unified
+ 212              		.thumb
+ 213              		.thumb_func
+ 215              	AS5600_GetAngleRad:
+ 216              	.LVL13:
+ 217              	.LFB137:
+  47:Core/Src/as5600.c **** 
+  48:Core/Src/as5600.c **** /* góc radian */
+  49:Core/Src/as5600.c **** float AS5600_GetAngleRad(AS5600_Handle_t *h)
+  50:Core/Src/as5600.c **** {
+ 218              		.loc 1 50 1 is_stmt 1 view -0
+ 219              		.cfi_startproc
+ 220              		@ args = 0, pretend = 0, frame = 0
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+ 222              		.loc 1 50 1 is_stmt 0 view .LVU50
+ 223 0000 10B5     		push	{r4, lr}
+ 224              	.LCFI5:
+ 225              		.cfi_def_cfa_offset 8
+ 226              		.cfi_offset 4, -8
+ 227              		.cfi_offset 14, -4
+ 228 0002 0446     		mov	r4, r0
+  51:Core/Src/as5600.c ****     if (AS5600_ReadRaw(h) != HAL_OK)
+ 229              		.loc 1 51 5 is_stmt 1 view .LVU51
+ 230              		.loc 1 51 9 is_stmt 0 view .LVU52
+ 231 0004 FFF7FEFF 		bl	AS5600_ReadRaw
+ 232              	.LVL14:
+ 233              		.loc 1 51 8 discriminator 1 view .LVU53
+ 234 0008 C8B9     		cbnz	r0, .L20
+  52:Core/Src/as5600.c ****         return h->angle_rad;
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s 			page 6
+
+
+  53:Core/Src/as5600.c **** 
+  54:Core/Src/as5600.c ****     h->angle_rad = (h->raw_angle * 2.0f * M_PI) / 4096.0f;
+ 235              		.loc 1 54 5 is_stmt 1 view .LVU54
+ 236              		.loc 1 54 22 is_stmt 0 view .LVU55
+ 237 000a A388     		ldrh	r3, [r4, #4]
+ 238 000c 07EE903A 		vmov	s15, r3	@ int
+ 239              		.loc 1 54 34 view .LVU56
+ 240 0010 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 241 0014 77EEA77A 		vadd.f32	s15, s15, s15
+ 242 0018 17EE900A 		vmov	r0, s15
+ 243 001c FFF7FEFF 		bl	__aeabi_f2d
+ 244              	.LVL15:
+ 245              		.loc 1 54 41 view .LVU57
+ 246 0020 0AA3     		adr	r3, .L21+4
+ 247 0022 D3E90023 		ldrd	r2, [r3]
+ 248 0026 FFF7FEFF 		bl	__aeabi_dmul
+ 249              	.LVL16:
+ 250              		.loc 1 54 49 view .LVU58
+ 251 002a 0022     		movs	r2, #0
+ 252 002c 064B     		ldr	r3, .L21
+ 253 002e FFF7FEFF 		bl	__aeabi_dmul
+ 254              	.LVL17:
+ 255 0032 FFF7FEFF 		bl	__aeabi_d2f
+ 256              	.LVL18:
+ 257 0036 00EE100A 		vmov	s0, r0
+ 258              		.loc 1 54 18 view .LVU59
+ 259 003a E060     		str	r0, [r4, #12]	@ float
+  55:Core/Src/as5600.c ****     return h->angle_rad;
+ 260              		.loc 1 55 5 is_stmt 1 view .LVU60
+ 261              	.L16:
+  56:Core/Src/as5600.c **** }
+ 262              		.loc 1 56 1 is_stmt 0 view .LVU61
+ 263 003c 10BD     		pop	{r4, pc}
+ 264              	.LVL19:
+ 265              	.L20:
+  52:Core/Src/as5600.c ****         return h->angle_rad;
+ 266              		.loc 1 52 9 is_stmt 1 view .LVU62
+  52:Core/Src/as5600.c ****         return h->angle_rad;
+ 267              		.loc 1 52 17 is_stmt 0 view .LVU63
+ 268 003e 94ED030A 		vldr.32	s0, [r4, #12]
+ 269 0042 FBE7     		b	.L16
+ 270              	.L22:
+ 271 0044 AFF30080 		.align	3
+ 272              	.L21:
+ 273 0048 0000303F 		.word	1060110336
+ 274 004c 182D4454 		.word	1413754136
+ 275 0050 FB210940 		.word	1074340347
+ 276              		.cfi_endproc
+ 277              	.LFE137:
+ 279              		.text
+ 280              	.Letext0:
+ 281              		.file 2 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 282              		.file 3 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 283              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 284              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 285              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 286              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h"
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s 			page 7
+
+
+ 287              		.file 8 "Core/Inc/as5600.h"
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 as5600.c
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:21     .text.AS5600_Init:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:27     .text.AS5600_Init:00000000 AS5600_Init
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:78     .text.AS5600_ReadRaw:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:84     .text.AS5600_ReadRaw:00000000 AS5600_ReadRaw
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:151    .text.AS5600_GetAngleDeg:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:157    .text.AS5600_GetAngleDeg:00000000 AS5600_GetAngleDeg
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:203    .text.AS5600_GetAngleDeg:00000030 $d
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:209    .text.AS5600_GetAngleRad:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:215    .text.AS5600_GetAngleRad:00000000 AS5600_GetAngleRad
+C:\Users\AD\AppData\Local\Temp\ccI6l9E8.s:273    .text.AS5600_GetAngleRad:00000048 $d
+
+UNDEFINED SYMBOLS
+HAL_I2C_Mem_Read
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_d2f

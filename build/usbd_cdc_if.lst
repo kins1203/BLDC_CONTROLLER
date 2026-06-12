@@ -1,0 +1,774 @@
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"usbd_cdc_if.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "USB_DEVICE/App/usbd_cdc_if.c"
+  20              		.section	.text.CDC_DeInit_FS,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	CDC_DeInit_FS:
+  27              	.LFB139:
+   1:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE BEGIN Header */
+   2:USB_DEVICE/App/usbd_cdc_if.c **** /**
+   3:USB_DEVICE/App/usbd_cdc_if.c ****   ******************************************************************************
+   4:USB_DEVICE/App/usbd_cdc_if.c ****   * @file           : usbd_cdc_if.c
+   5:USB_DEVICE/App/usbd_cdc_if.c ****   * @version        : v1.0_Cube
+   6:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief          : Usb device for Virtual Com Port.
+   7:USB_DEVICE/App/usbd_cdc_if.c ****   ******************************************************************************
+   8:USB_DEVICE/App/usbd_cdc_if.c ****   * @attention
+   9:USB_DEVICE/App/usbd_cdc_if.c ****   *
+  10:USB_DEVICE/App/usbd_cdc_if.c ****   * Copyright (c) 2025 STMicroelectronics.
+  11:USB_DEVICE/App/usbd_cdc_if.c ****   * All rights reserved.
+  12:USB_DEVICE/App/usbd_cdc_if.c ****   *
+  13:USB_DEVICE/App/usbd_cdc_if.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:USB_DEVICE/App/usbd_cdc_if.c ****   * in the root directory of this software component.
+  15:USB_DEVICE/App/usbd_cdc_if.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:USB_DEVICE/App/usbd_cdc_if.c ****   *
+  17:USB_DEVICE/App/usbd_cdc_if.c ****   ******************************************************************************
+  18:USB_DEVICE/App/usbd_cdc_if.c ****   */
+  19:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE END Header */
+  20:USB_DEVICE/App/usbd_cdc_if.c **** 
+  21:USB_DEVICE/App/usbd_cdc_if.c **** /* Includes ------------------------------------------------------------------*/
+  22:USB_DEVICE/App/usbd_cdc_if.c **** #include "usbd_cdc_if.h"
+  23:USB_DEVICE/App/usbd_cdc_if.c **** 
+  24:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE BEGIN INCLUDE */
+  25:USB_DEVICE/App/usbd_cdc_if.c **** 
+  26:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE END INCLUDE */
+  27:USB_DEVICE/App/usbd_cdc_if.c **** 
+  28:USB_DEVICE/App/usbd_cdc_if.c **** /* Private typedef -----------------------------------------------------------*/
+  29:USB_DEVICE/App/usbd_cdc_if.c **** /* Private define ------------------------------------------------------------*/
+  30:USB_DEVICE/App/usbd_cdc_if.c **** /* Private macro -------------------------------------------------------------*/
+  31:USB_DEVICE/App/usbd_cdc_if.c **** 
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 2
+
+
+  32:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE BEGIN PV */
+  33:USB_DEVICE/App/usbd_cdc_if.c **** /* Private variables ---------------------------------------------------------*/
+  34:USB_DEVICE/App/usbd_cdc_if.c **** 
+  35:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE END PV */
+  36:USB_DEVICE/App/usbd_cdc_if.c **** 
+  37:USB_DEVICE/App/usbd_cdc_if.c **** /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
+  38:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief Usb device library.
+  39:USB_DEVICE/App/usbd_cdc_if.c ****   * @{
+  40:USB_DEVICE/App/usbd_cdc_if.c ****   */
+  41:USB_DEVICE/App/usbd_cdc_if.c **** 
+  42:USB_DEVICE/App/usbd_cdc_if.c **** /** @addtogroup USBD_CDC_IF
+  43:USB_DEVICE/App/usbd_cdc_if.c ****   * @{
+  44:USB_DEVICE/App/usbd_cdc_if.c ****   */
+  45:USB_DEVICE/App/usbd_cdc_if.c **** 
+  46:USB_DEVICE/App/usbd_cdc_if.c **** /** @defgroup USBD_CDC_IF_Private_TypesDefinitions USBD_CDC_IF_Private_TypesDefinitions
+  47:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief Private types.
+  48:USB_DEVICE/App/usbd_cdc_if.c ****   * @{
+  49:USB_DEVICE/App/usbd_cdc_if.c ****   */
+  50:USB_DEVICE/App/usbd_cdc_if.c **** 
+  51:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE BEGIN PRIVATE_TYPES */
+  52:USB_DEVICE/App/usbd_cdc_if.c **** 
+  53:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE END PRIVATE_TYPES */
+  54:USB_DEVICE/App/usbd_cdc_if.c **** 
+  55:USB_DEVICE/App/usbd_cdc_if.c **** /**
+  56:USB_DEVICE/App/usbd_cdc_if.c ****   * @}
+  57:USB_DEVICE/App/usbd_cdc_if.c ****   */
+  58:USB_DEVICE/App/usbd_cdc_if.c **** 
+  59:USB_DEVICE/App/usbd_cdc_if.c **** /** @defgroup USBD_CDC_IF_Private_Defines USBD_CDC_IF_Private_Defines
+  60:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief Private defines.
+  61:USB_DEVICE/App/usbd_cdc_if.c ****   * @{
+  62:USB_DEVICE/App/usbd_cdc_if.c ****   */
+  63:USB_DEVICE/App/usbd_cdc_if.c **** 
+  64:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE BEGIN PRIVATE_DEFINES */
+  65:USB_DEVICE/App/usbd_cdc_if.c **** #define CDC_RX_BUF_SIZE  64
+  66:USB_DEVICE/App/usbd_cdc_if.c **** 
+  67:USB_DEVICE/App/usbd_cdc_if.c **** uint8_t cdc_rx_buf[CDC_RX_BUF_SIZE];
+  68:USB_DEVICE/App/usbd_cdc_if.c **** volatile uint8_t cdc_rx_len = 0;
+  69:USB_DEVICE/App/usbd_cdc_if.c **** volatile uint8_t cdc_rx_flag = 0;
+  70:USB_DEVICE/App/usbd_cdc_if.c **** 
+  71:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE END PRIVATE_DEFINES */
+  72:USB_DEVICE/App/usbd_cdc_if.c **** 
+  73:USB_DEVICE/App/usbd_cdc_if.c **** /**
+  74:USB_DEVICE/App/usbd_cdc_if.c ****   * @}
+  75:USB_DEVICE/App/usbd_cdc_if.c ****   */
+  76:USB_DEVICE/App/usbd_cdc_if.c **** 
+  77:USB_DEVICE/App/usbd_cdc_if.c **** /** @defgroup USBD_CDC_IF_Private_Macros USBD_CDC_IF_Private_Macros
+  78:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief Private macros.
+  79:USB_DEVICE/App/usbd_cdc_if.c ****   * @{
+  80:USB_DEVICE/App/usbd_cdc_if.c ****   */
+  81:USB_DEVICE/App/usbd_cdc_if.c **** 
+  82:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE BEGIN PRIVATE_MACRO */
+  83:USB_DEVICE/App/usbd_cdc_if.c **** 
+  84:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE END PRIVATE_MACRO */
+  85:USB_DEVICE/App/usbd_cdc_if.c **** 
+  86:USB_DEVICE/App/usbd_cdc_if.c **** /**
+  87:USB_DEVICE/App/usbd_cdc_if.c ****   * @}
+  88:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 3
+
+
+  89:USB_DEVICE/App/usbd_cdc_if.c **** 
+  90:USB_DEVICE/App/usbd_cdc_if.c **** /** @defgroup USBD_CDC_IF_Private_Variables USBD_CDC_IF_Private_Variables
+  91:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief Private variables.
+  92:USB_DEVICE/App/usbd_cdc_if.c ****   * @{
+  93:USB_DEVICE/App/usbd_cdc_if.c ****   */
+  94:USB_DEVICE/App/usbd_cdc_if.c **** /* Create buffer for reception and transmission           */
+  95:USB_DEVICE/App/usbd_cdc_if.c **** /* It's up to user to redefine and/or remove those define */
+  96:USB_DEVICE/App/usbd_cdc_if.c **** /** Received data over USB are stored in this buffer      */
+  97:USB_DEVICE/App/usbd_cdc_if.c **** uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
+  98:USB_DEVICE/App/usbd_cdc_if.c **** 
+  99:USB_DEVICE/App/usbd_cdc_if.c **** /** Data to send over USB CDC are stored in this buffer   */
+ 100:USB_DEVICE/App/usbd_cdc_if.c **** uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
+ 101:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 102:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE BEGIN PRIVATE_VARIABLES */
+ 103:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 104:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE END PRIVATE_VARIABLES */
+ 105:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 106:USB_DEVICE/App/usbd_cdc_if.c **** /**
+ 107:USB_DEVICE/App/usbd_cdc_if.c ****   * @}
+ 108:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 109:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 110:USB_DEVICE/App/usbd_cdc_if.c **** /** @defgroup USBD_CDC_IF_Exported_Variables USBD_CDC_IF_Exported_Variables
+ 111:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief Public variables.
+ 112:USB_DEVICE/App/usbd_cdc_if.c ****   * @{
+ 113:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 114:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 115:USB_DEVICE/App/usbd_cdc_if.c **** extern USBD_HandleTypeDef hUsbDeviceFS;
+ 116:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 117:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE BEGIN EXPORTED_VARIABLES */
+ 118:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 119:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE END EXPORTED_VARIABLES */
+ 120:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 121:USB_DEVICE/App/usbd_cdc_if.c **** /**
+ 122:USB_DEVICE/App/usbd_cdc_if.c ****   * @}
+ 123:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 124:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 125:USB_DEVICE/App/usbd_cdc_if.c **** /** @defgroup USBD_CDC_IF_Private_FunctionPrototypes USBD_CDC_IF_Private_FunctionPrototypes
+ 126:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief Private functions declaration.
+ 127:USB_DEVICE/App/usbd_cdc_if.c ****   * @{
+ 128:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 129:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 130:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_Init_FS(void);
+ 131:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_DeInit_FS(void);
+ 132:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length);
+ 133:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_Receive_FS(uint8_t* pbuf, uint32_t *Len);
+ 134:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_TransmitCplt_FS(uint8_t *pbuf, uint32_t *Len, uint8_t epnum);
+ 135:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 136:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
+ 137:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 138:USB_DEVICE/App/usbd_cdc_if.c **** /* USER CODE END PRIVATE_FUNCTIONS_DECLARATION */
+ 139:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 140:USB_DEVICE/App/usbd_cdc_if.c **** /**
+ 141:USB_DEVICE/App/usbd_cdc_if.c ****   * @}
+ 142:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 143:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 144:USB_DEVICE/App/usbd_cdc_if.c **** USBD_CDC_ItfTypeDef USBD_Interface_fops_FS =
+ 145:USB_DEVICE/App/usbd_cdc_if.c **** {
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 4
+
+
+ 146:USB_DEVICE/App/usbd_cdc_if.c ****   CDC_Init_FS,
+ 147:USB_DEVICE/App/usbd_cdc_if.c ****   CDC_DeInit_FS,
+ 148:USB_DEVICE/App/usbd_cdc_if.c ****   CDC_Control_FS,
+ 149:USB_DEVICE/App/usbd_cdc_if.c ****   CDC_Receive_FS,
+ 150:USB_DEVICE/App/usbd_cdc_if.c ****   CDC_TransmitCplt_FS
+ 151:USB_DEVICE/App/usbd_cdc_if.c **** };
+ 152:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 153:USB_DEVICE/App/usbd_cdc_if.c **** /* Private functions ---------------------------------------------------------*/
+ 154:USB_DEVICE/App/usbd_cdc_if.c **** /**
+ 155:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief  Initializes the CDC media low layer over the FS USB IP
+ 156:USB_DEVICE/App/usbd_cdc_if.c ****   * @retval USBD_OK if all operations are OK else USBD_FAIL
+ 157:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 158:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_Init_FS(void)
+ 159:USB_DEVICE/App/usbd_cdc_if.c **** {
+ 160:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 3 */
+ 161:USB_DEVICE/App/usbd_cdc_if.c ****   /* Set Application Buffers */
+ 162:USB_DEVICE/App/usbd_cdc_if.c ****   USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 0);
+ 163:USB_DEVICE/App/usbd_cdc_if.c ****   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS);
+ 164:USB_DEVICE/App/usbd_cdc_if.c ****   return (USBD_OK);
+ 165:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 3 */
+ 166:USB_DEVICE/App/usbd_cdc_if.c **** }
+ 167:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 168:USB_DEVICE/App/usbd_cdc_if.c **** /**
+ 169:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief  DeInitializes the CDC media low layer
+ 170:USB_DEVICE/App/usbd_cdc_if.c ****   * @retval USBD_OK if all operations are OK else USBD_FAIL
+ 171:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 172:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_DeInit_FS(void)
+ 173:USB_DEVICE/App/usbd_cdc_if.c **** {
+  28              		.loc 1 173 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+ 174:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 4 */
+ 175:USB_DEVICE/App/usbd_cdc_if.c ****   return (USBD_OK);
+  33              		.loc 1 175 3 view .LVU1
+ 176:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 4 */
+ 177:USB_DEVICE/App/usbd_cdc_if.c **** }
+  34              		.loc 1 177 1 is_stmt 0 view .LVU2
+  35 0000 0020     		movs	r0, #0
+  36 0002 7047     		bx	lr
+  37              		.cfi_endproc
+  38              	.LFE139:
+  40              		.section	.text.CDC_Control_FS,"ax",%progbits
+  41              		.align	1
+  42              		.syntax unified
+  43              		.thumb
+  44              		.thumb_func
+  46              	CDC_Control_FS:
+  47              	.LVL0:
+  48              	.LFB140:
+ 178:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 179:USB_DEVICE/App/usbd_cdc_if.c **** /**
+ 180:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief  Manage the CDC class requests
+ 181:USB_DEVICE/App/usbd_cdc_if.c ****   * @param  cmd: Command code
+ 182:USB_DEVICE/App/usbd_cdc_if.c ****   * @param  pbuf: Buffer containing command data (request parameters)
+ 183:USB_DEVICE/App/usbd_cdc_if.c ****   * @param  length: Number of data to be sent (in bytes)
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 5
+
+
+ 184:USB_DEVICE/App/usbd_cdc_if.c ****   * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
+ 185:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 186:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
+ 187:USB_DEVICE/App/usbd_cdc_if.c **** {
+  49              		.loc 1 187 1 is_stmt 1 view -0
+  50              		.cfi_startproc
+  51              		@ args = 0, pretend = 0, frame = 0
+  52              		@ frame_needed = 0, uses_anonymous_args = 0
+  53              		@ link register save eliminated.
+ 188:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 5 */
+ 189:USB_DEVICE/App/usbd_cdc_if.c ****   switch(cmd)
+  54              		.loc 1 189 3 view .LVU4
+ 190:USB_DEVICE/App/usbd_cdc_if.c ****   {
+ 191:USB_DEVICE/App/usbd_cdc_if.c ****     case CDC_SEND_ENCAPSULATED_COMMAND:
+ 192:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 193:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+ 194:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 195:USB_DEVICE/App/usbd_cdc_if.c ****     case CDC_GET_ENCAPSULATED_RESPONSE:
+ 196:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 197:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+ 198:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 199:USB_DEVICE/App/usbd_cdc_if.c ****     case CDC_SET_COMM_FEATURE:
+ 200:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 201:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+ 202:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 203:USB_DEVICE/App/usbd_cdc_if.c ****     case CDC_GET_COMM_FEATURE:
+ 204:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 205:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+ 206:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 207:USB_DEVICE/App/usbd_cdc_if.c ****     case CDC_CLEAR_COMM_FEATURE:
+ 208:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 209:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+ 210:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 211:USB_DEVICE/App/usbd_cdc_if.c ****   /*******************************************************************************/
+ 212:USB_DEVICE/App/usbd_cdc_if.c ****   /* Line Coding Structure                                                       */
+ 213:USB_DEVICE/App/usbd_cdc_if.c ****   /*-----------------------------------------------------------------------------*/
+ 214:USB_DEVICE/App/usbd_cdc_if.c ****   /* Offset | Field       | Size | Value  | Description                          */
+ 215:USB_DEVICE/App/usbd_cdc_if.c ****   /* 0      | dwDTERate   |   4  | Number |Data terminal rate, in bits per second*/
+ 216:USB_DEVICE/App/usbd_cdc_if.c ****   /* 4      | bCharFormat |   1  | Number | Stop bits                            */
+ 217:USB_DEVICE/App/usbd_cdc_if.c ****   /*                                        0 - 1 Stop bit                       */
+ 218:USB_DEVICE/App/usbd_cdc_if.c ****   /*                                        1 - 1.5 Stop bits                    */
+ 219:USB_DEVICE/App/usbd_cdc_if.c ****   /*                                        2 - 2 Stop bits                      */
+ 220:USB_DEVICE/App/usbd_cdc_if.c ****   /* 5      | bParityType |  1   | Number | Parity                               */
+ 221:USB_DEVICE/App/usbd_cdc_if.c ****   /*                                        0 - None                             */
+ 222:USB_DEVICE/App/usbd_cdc_if.c ****   /*                                        1 - Odd                              */
+ 223:USB_DEVICE/App/usbd_cdc_if.c ****   /*                                        2 - Even                             */
+ 224:USB_DEVICE/App/usbd_cdc_if.c ****   /*                                        3 - Mark                             */
+ 225:USB_DEVICE/App/usbd_cdc_if.c ****   /*                                        4 - Space                            */
+ 226:USB_DEVICE/App/usbd_cdc_if.c ****   /* 6      | bDataBits  |   1   | Number Data bits (5, 6, 7, 8 or 16).          */
+ 227:USB_DEVICE/App/usbd_cdc_if.c ****   /*******************************************************************************/
+ 228:USB_DEVICE/App/usbd_cdc_if.c ****     case CDC_SET_LINE_CODING:
+ 229:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 230:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+ 231:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 232:USB_DEVICE/App/usbd_cdc_if.c ****     case CDC_GET_LINE_CODING:
+ 233:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 234:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 6
+
+
+ 235:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 236:USB_DEVICE/App/usbd_cdc_if.c ****     case CDC_SET_CONTROL_LINE_STATE:
+ 237:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 238:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+ 239:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 240:USB_DEVICE/App/usbd_cdc_if.c ****     case CDC_SEND_BREAK:
+ 241:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 242:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+ 243:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 244:USB_DEVICE/App/usbd_cdc_if.c ****   default:
+ 245:USB_DEVICE/App/usbd_cdc_if.c ****     break;
+  55              		.loc 1 245 5 view .LVU5
+ 246:USB_DEVICE/App/usbd_cdc_if.c ****   }
+ 247:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 248:USB_DEVICE/App/usbd_cdc_if.c ****   return (USBD_OK);
+  56              		.loc 1 248 3 view .LVU6
+ 249:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 5 */
+ 250:USB_DEVICE/App/usbd_cdc_if.c **** }
+  57              		.loc 1 250 1 is_stmt 0 view .LVU7
+  58 0000 0020     		movs	r0, #0
+  59              	.LVL1:
+  60              		.loc 1 250 1 view .LVU8
+  61 0002 7047     		bx	lr
+  62              		.cfi_endproc
+  63              	.LFE140:
+  65              		.section	.text.CDC_TransmitCplt_FS,"ax",%progbits
+  66              		.align	1
+  67              		.syntax unified
+  68              		.thumb
+  69              		.thumb_func
+  71              	CDC_TransmitCplt_FS:
+  72              	.LVL2:
+  73              	.LFB143:
+ 251:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 252:USB_DEVICE/App/usbd_cdc_if.c **** /**
+ 253:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief  Data received over USB OUT endpoint are sent over CDC interface
+ 254:USB_DEVICE/App/usbd_cdc_if.c ****   *         through this function.
+ 255:USB_DEVICE/App/usbd_cdc_if.c ****   *
+ 256:USB_DEVICE/App/usbd_cdc_if.c ****   *         @note
+ 257:USB_DEVICE/App/usbd_cdc_if.c ****   *         This function will issue a NAK packet on any OUT packet received on
+ 258:USB_DEVICE/App/usbd_cdc_if.c ****   *         USB endpoint until exiting this function. If you exit this function
+ 259:USB_DEVICE/App/usbd_cdc_if.c ****   *         before transfer is complete on CDC interface (ie. using DMA controller)
+ 260:USB_DEVICE/App/usbd_cdc_if.c ****   *         it will result in receiving more data while previous ones are still
+ 261:USB_DEVICE/App/usbd_cdc_if.c ****   *         not sent.
+ 262:USB_DEVICE/App/usbd_cdc_if.c ****   *
+ 263:USB_DEVICE/App/usbd_cdc_if.c ****   * @param  Buf: Buffer of data to be received
+ 264:USB_DEVICE/App/usbd_cdc_if.c ****   * @param  Len: Number of data received (in bytes)
+ 265:USB_DEVICE/App/usbd_cdc_if.c ****   * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
+ 266:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 267:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
+ 268:USB_DEVICE/App/usbd_cdc_if.c **** {
+ 269:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 6 */
+ 270:USB_DEVICE/App/usbd_cdc_if.c ****   if (*Len > 0)
+ 271:USB_DEVICE/App/usbd_cdc_if.c ****   {
+ 272:USB_DEVICE/App/usbd_cdc_if.c ****       uint32_t l = (*Len > CDC_RX_BUF_SIZE) ? CDC_RX_BUF_SIZE : *Len;
+ 273:USB_DEVICE/App/usbd_cdc_if.c ****       memcpy((void *)cdc_rx_buf, Buf, l);
+ 274:USB_DEVICE/App/usbd_cdc_if.c ****       cdc_rx_len = l;
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 7
+
+
+ 275:USB_DEVICE/App/usbd_cdc_if.c ****       cdc_rx_flag = 1;   // báo có lệnh mới
+ 276:USB_DEVICE/App/usbd_cdc_if.c ****   }
+ 277:USB_DEVICE/App/usbd_cdc_if.c ****   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
+ 278:USB_DEVICE/App/usbd_cdc_if.c ****   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+ 279:USB_DEVICE/App/usbd_cdc_if.c ****   return (USBD_OK);
+ 280:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 6 */
+ 281:USB_DEVICE/App/usbd_cdc_if.c **** }
+ 282:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 283:USB_DEVICE/App/usbd_cdc_if.c **** /**
+ 284:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief  CDC_Transmit_FS
+ 285:USB_DEVICE/App/usbd_cdc_if.c ****   *         Data to send over USB IN endpoint are sent over CDC interface
+ 286:USB_DEVICE/App/usbd_cdc_if.c ****   *         through this function.
+ 287:USB_DEVICE/App/usbd_cdc_if.c ****   *         @note
+ 288:USB_DEVICE/App/usbd_cdc_if.c ****   *
+ 289:USB_DEVICE/App/usbd_cdc_if.c ****   *
+ 290:USB_DEVICE/App/usbd_cdc_if.c ****   * @param  Buf: Buffer of data to be sent
+ 291:USB_DEVICE/App/usbd_cdc_if.c ****   * @param  Len: Number of data to be sent (in bytes)
+ 292:USB_DEVICE/App/usbd_cdc_if.c ****   * @retval USBD_OK if all operations are OK else USBD_FAIL or USBD_BUSY
+ 293:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 294:USB_DEVICE/App/usbd_cdc_if.c **** uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
+ 295:USB_DEVICE/App/usbd_cdc_if.c **** {
+ 296:USB_DEVICE/App/usbd_cdc_if.c ****   uint8_t result = USBD_OK;
+ 297:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 7 */
+ 298:USB_DEVICE/App/usbd_cdc_if.c ****   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
+ 299:USB_DEVICE/App/usbd_cdc_if.c ****   if (hcdc->TxState != 0){
+ 300:USB_DEVICE/App/usbd_cdc_if.c ****     return USBD_BUSY;
+ 301:USB_DEVICE/App/usbd_cdc_if.c ****   }
+ 302:USB_DEVICE/App/usbd_cdc_if.c ****   USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);
+ 303:USB_DEVICE/App/usbd_cdc_if.c ****   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+ 304:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 7 */
+ 305:USB_DEVICE/App/usbd_cdc_if.c ****   return result;
+ 306:USB_DEVICE/App/usbd_cdc_if.c **** }
+ 307:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 308:USB_DEVICE/App/usbd_cdc_if.c **** /**
+ 309:USB_DEVICE/App/usbd_cdc_if.c ****   * @brief  CDC_TransmitCplt_FS
+ 310:USB_DEVICE/App/usbd_cdc_if.c ****   *         Data transmitted callback
+ 311:USB_DEVICE/App/usbd_cdc_if.c ****   *
+ 312:USB_DEVICE/App/usbd_cdc_if.c ****   *         @note
+ 313:USB_DEVICE/App/usbd_cdc_if.c ****   *         This function is IN transfer complete callback used to inform user that
+ 314:USB_DEVICE/App/usbd_cdc_if.c ****   *         the submitted Data is successfully sent over USB.
+ 315:USB_DEVICE/App/usbd_cdc_if.c ****   *
+ 316:USB_DEVICE/App/usbd_cdc_if.c ****   * @param  Buf: Buffer of data to be received
+ 317:USB_DEVICE/App/usbd_cdc_if.c ****   * @param  Len: Number of data received (in bytes)
+ 318:USB_DEVICE/App/usbd_cdc_if.c ****   * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
+ 319:USB_DEVICE/App/usbd_cdc_if.c ****   */
+ 320:USB_DEVICE/App/usbd_cdc_if.c **** static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
+ 321:USB_DEVICE/App/usbd_cdc_if.c **** {
+  74              		.loc 1 321 1 is_stmt 1 view -0
+  75              		.cfi_startproc
+  76              		@ args = 0, pretend = 0, frame = 0
+  77              		@ frame_needed = 0, uses_anonymous_args = 0
+  78              		@ link register save eliminated.
+ 322:USB_DEVICE/App/usbd_cdc_if.c ****   uint8_t result = USBD_OK;
+  79              		.loc 1 322 3 view .LVU10
+ 323:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 13 */
+ 324:USB_DEVICE/App/usbd_cdc_if.c ****   UNUSED(Buf);
+  80              		.loc 1 324 3 view .LVU11
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 8
+
+
+ 325:USB_DEVICE/App/usbd_cdc_if.c ****   UNUSED(Len);
+  81              		.loc 1 325 3 view .LVU12
+ 326:USB_DEVICE/App/usbd_cdc_if.c ****   UNUSED(epnum);
+  82              		.loc 1 326 3 view .LVU13
+ 327:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 13 */
+ 328:USB_DEVICE/App/usbd_cdc_if.c ****   return result;
+  83              		.loc 1 328 3 view .LVU14
+ 329:USB_DEVICE/App/usbd_cdc_if.c **** }
+  84              		.loc 1 329 1 is_stmt 0 view .LVU15
+  85 0000 0020     		movs	r0, #0
+  86              	.LVL3:
+  87              		.loc 1 329 1 view .LVU16
+  88 0002 7047     		bx	lr
+  89              		.cfi_endproc
+  90              	.LFE143:
+  92              		.section	.text.CDC_Receive_FS,"ax",%progbits
+  93              		.align	1
+  94              		.syntax unified
+  95              		.thumb
+  96              		.thumb_func
+  98              	CDC_Receive_FS:
+  99              	.LVL4:
+ 100              	.LFB141:
+ 268:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 6 */
+ 101              		.loc 1 268 1 is_stmt 1 view -0
+ 102              		.cfi_startproc
+ 103              		@ args = 0, pretend = 0, frame = 0
+ 104              		@ frame_needed = 0, uses_anonymous_args = 0
+ 268:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 6 */
+ 105              		.loc 1 268 1 is_stmt 0 view .LVU18
+ 106 0000 38B5     		push	{r3, r4, r5, lr}
+ 107              	.LCFI0:
+ 108              		.cfi_def_cfa_offset 16
+ 109              		.cfi_offset 3, -16
+ 110              		.cfi_offset 4, -12
+ 111              		.cfi_offset 5, -8
+ 112              		.cfi_offset 14, -4
+ 113 0002 0446     		mov	r4, r0
+ 270:USB_DEVICE/App/usbd_cdc_if.c ****   {
+ 114              		.loc 1 270 3 is_stmt 1 view .LVU19
+ 270:USB_DEVICE/App/usbd_cdc_if.c ****   {
+ 115              		.loc 1 270 7 is_stmt 0 view .LVU20
+ 116 0004 0D68     		ldr	r5, [r1]
+ 270:USB_DEVICE/App/usbd_cdc_if.c ****   {
+ 117              		.loc 1 270 6 view .LVU21
+ 118 0006 4DB9     		cbnz	r5, .L7
+ 119              	.LVL5:
+ 120              	.L5:
+ 277:USB_DEVICE/App/usbd_cdc_if.c ****   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+ 121              		.loc 1 277 3 is_stmt 1 view .LVU22
+ 122 0008 0C4D     		ldr	r5, .L8
+ 123 000a 2146     		mov	r1, r4
+ 124 000c 2846     		mov	r0, r5
+ 125 000e FFF7FEFF 		bl	USBD_CDC_SetRxBuffer
+ 126              	.LVL6:
+ 278:USB_DEVICE/App/usbd_cdc_if.c ****   return (USBD_OK);
+ 127              		.loc 1 278 3 view .LVU23
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 9
+
+
+ 128 0012 2846     		mov	r0, r5
+ 129 0014 FFF7FEFF 		bl	USBD_CDC_ReceivePacket
+ 130              	.LVL7:
+ 279:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 6 */
+ 131              		.loc 1 279 3 view .LVU24
+ 281:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 132              		.loc 1 281 1 is_stmt 0 view .LVU25
+ 133 0018 0020     		movs	r0, #0
+ 134 001a 38BD     		pop	{r3, r4, r5, pc}
+ 135              	.LVL8:
+ 136              	.L7:
+ 137              	.LBB2:
+ 272:USB_DEVICE/App/usbd_cdc_if.c ****       memcpy((void *)cdc_rx_buf, Buf, l);
+ 138              		.loc 1 272 7 is_stmt 1 view .LVU26
+ 272:USB_DEVICE/App/usbd_cdc_if.c ****       memcpy((void *)cdc_rx_buf, Buf, l);
+ 139              		.loc 1 272 16 is_stmt 0 view .LVU27
+ 140 001c 402D     		cmp	r5, #64
+ 141 001e 28BF     		it	cs
+ 142 0020 4025     		movcs	r5, #64
+ 143              	.LVL9:
+ 273:USB_DEVICE/App/usbd_cdc_if.c ****       cdc_rx_len = l;
+ 144              		.loc 1 273 7 is_stmt 1 view .LVU28
+ 145 0022 2A46     		mov	r2, r5
+ 146 0024 0146     		mov	r1, r0
+ 147              	.LVL10:
+ 273:USB_DEVICE/App/usbd_cdc_if.c ****       cdc_rx_len = l;
+ 148              		.loc 1 273 7 is_stmt 0 view .LVU29
+ 149 0026 0648     		ldr	r0, .L8+4
+ 150              	.LVL11:
+ 273:USB_DEVICE/App/usbd_cdc_if.c ****       cdc_rx_len = l;
+ 151              		.loc 1 273 7 view .LVU30
+ 152 0028 FFF7FEFF 		bl	memcpy
+ 153              	.LVL12:
+ 274:USB_DEVICE/App/usbd_cdc_if.c ****       cdc_rx_flag = 1;   // báo có lệnh mới
+ 154              		.loc 1 274 7 is_stmt 1 view .LVU31
+ 274:USB_DEVICE/App/usbd_cdc_if.c ****       cdc_rx_flag = 1;   // báo có lệnh mới
+ 155              		.loc 1 274 18 is_stmt 0 view .LVU32
+ 156 002c EAB2     		uxtb	r2, r5
+ 157 002e 054B     		ldr	r3, .L8+8
+ 158 0030 1A70     		strb	r2, [r3]
+ 275:USB_DEVICE/App/usbd_cdc_if.c ****   }
+ 159              		.loc 1 275 7 is_stmt 1 view .LVU33
+ 275:USB_DEVICE/App/usbd_cdc_if.c ****   }
+ 160              		.loc 1 275 19 is_stmt 0 view .LVU34
+ 161 0032 054B     		ldr	r3, .L8+12
+ 162 0034 0122     		movs	r2, #1
+ 163 0036 1A70     		strb	r2, [r3]
+ 164 0038 E6E7     		b	.L5
+ 165              	.L9:
+ 166 003a 00BF     		.align	2
+ 167              	.L8:
+ 168 003c 00000000 		.word	hUsbDeviceFS
+ 169 0040 00000000 		.word	cdc_rx_buf
+ 170 0044 00000000 		.word	cdc_rx_len
+ 171 0048 00000000 		.word	cdc_rx_flag
+ 172              	.LBE2:
+ 173              		.cfi_endproc
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 10
+
+
+ 174              	.LFE141:
+ 176              		.section	.text.CDC_Init_FS,"ax",%progbits
+ 177              		.align	1
+ 178              		.syntax unified
+ 179              		.thumb
+ 180              		.thumb_func
+ 182              	CDC_Init_FS:
+ 183              	.LFB138:
+ 159:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 3 */
+ 184              		.loc 1 159 1 is_stmt 1 view -0
+ 185              		.cfi_startproc
+ 186              		@ args = 0, pretend = 0, frame = 0
+ 187              		@ frame_needed = 0, uses_anonymous_args = 0
+ 188 0000 10B5     		push	{r4, lr}
+ 189              	.LCFI1:
+ 190              		.cfi_def_cfa_offset 8
+ 191              		.cfi_offset 4, -8
+ 192              		.cfi_offset 14, -4
+ 162:USB_DEVICE/App/usbd_cdc_if.c ****   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS);
+ 193              		.loc 1 162 3 view .LVU36
+ 194 0002 064C     		ldr	r4, .L12
+ 195 0004 0022     		movs	r2, #0
+ 196 0006 0649     		ldr	r1, .L12+4
+ 197 0008 2046     		mov	r0, r4
+ 198 000a FFF7FEFF 		bl	USBD_CDC_SetTxBuffer
+ 199              	.LVL13:
+ 163:USB_DEVICE/App/usbd_cdc_if.c ****   return (USBD_OK);
+ 200              		.loc 1 163 3 view .LVU37
+ 201 000e 0549     		ldr	r1, .L12+8
+ 202 0010 2046     		mov	r0, r4
+ 203 0012 FFF7FEFF 		bl	USBD_CDC_SetRxBuffer
+ 204              	.LVL14:
+ 164:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 3 */
+ 205              		.loc 1 164 3 view .LVU38
+ 166:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 206              		.loc 1 166 1 is_stmt 0 view .LVU39
+ 207 0016 0020     		movs	r0, #0
+ 208 0018 10BD     		pop	{r4, pc}
+ 209              	.L13:
+ 210 001a 00BF     		.align	2
+ 211              	.L12:
+ 212 001c 00000000 		.word	hUsbDeviceFS
+ 213 0020 00000000 		.word	UserTxBufferFS
+ 214 0024 00000000 		.word	UserRxBufferFS
+ 215              		.cfi_endproc
+ 216              	.LFE138:
+ 218              		.section	.text.CDC_Transmit_FS,"ax",%progbits
+ 219              		.align	1
+ 220              		.global	CDC_Transmit_FS
+ 221              		.syntax unified
+ 222              		.thumb
+ 223              		.thumb_func
+ 225              	CDC_Transmit_FS:
+ 226              	.LVL15:
+ 227              	.LFB142:
+ 295:USB_DEVICE/App/usbd_cdc_if.c ****   uint8_t result = USBD_OK;
+ 228              		.loc 1 295 1 is_stmt 1 view -0
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 11
+
+
+ 229              		.cfi_startproc
+ 230              		@ args = 0, pretend = 0, frame = 0
+ 231              		@ frame_needed = 0, uses_anonymous_args = 0
+ 296:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE BEGIN 7 */
+ 232              		.loc 1 296 3 view .LVU41
+ 298:USB_DEVICE/App/usbd_cdc_if.c ****   if (hcdc->TxState != 0){
+ 233              		.loc 1 298 3 view .LVU42
+ 298:USB_DEVICE/App/usbd_cdc_if.c ****   if (hcdc->TxState != 0){
+ 234              		.loc 1 298 27 is_stmt 0 view .LVU43
+ 235 0000 094B     		ldr	r3, .L22
+ 236 0002 D3F8BC32 		ldr	r3, [r3, #700]
+ 237              	.LVL16:
+ 299:USB_DEVICE/App/usbd_cdc_if.c ****     return USBD_BUSY;
+ 238              		.loc 1 299 3 is_stmt 1 view .LVU44
+ 299:USB_DEVICE/App/usbd_cdc_if.c ****     return USBD_BUSY;
+ 239              		.loc 1 299 11 is_stmt 0 view .LVU45
+ 240 0006 D3F81432 		ldr	r3, [r3, #532]
+ 241              	.LVL17:
+ 299:USB_DEVICE/App/usbd_cdc_if.c ****     return USBD_BUSY;
+ 242              		.loc 1 299 6 view .LVU46
+ 243 000a 0BB1     		cbz	r3, .L21
+ 300:USB_DEVICE/App/usbd_cdc_if.c ****   }
+ 244              		.loc 1 300 12 view .LVU47
+ 245 000c 0120     		movs	r0, #1
+ 246              	.LVL18:
+ 306:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 247              		.loc 1 306 1 view .LVU48
+ 248 000e 7047     		bx	lr
+ 249              	.LVL19:
+ 250              	.L21:
+ 295:USB_DEVICE/App/usbd_cdc_if.c ****   uint8_t result = USBD_OK;
+ 251              		.loc 1 295 1 view .LVU49
+ 252 0010 10B5     		push	{r4, lr}
+ 253              	.LCFI2:
+ 254              		.cfi_def_cfa_offset 8
+ 255              		.cfi_offset 4, -8
+ 256              		.cfi_offset 14, -4
+ 302:USB_DEVICE/App/usbd_cdc_if.c ****   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+ 257              		.loc 1 302 3 is_stmt 1 view .LVU50
+ 258 0012 054C     		ldr	r4, .L22
+ 259              	.LVL20:
+ 302:USB_DEVICE/App/usbd_cdc_if.c ****   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+ 260              		.loc 1 302 3 is_stmt 0 view .LVU51
+ 261 0014 0A46     		mov	r2, r1
+ 262 0016 0146     		mov	r1, r0
+ 263              	.LVL21:
+ 302:USB_DEVICE/App/usbd_cdc_if.c ****   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+ 264              		.loc 1 302 3 view .LVU52
+ 265 0018 2046     		mov	r0, r4
+ 266              	.LVL22:
+ 302:USB_DEVICE/App/usbd_cdc_if.c ****   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+ 267              		.loc 1 302 3 view .LVU53
+ 268 001a FFF7FEFF 		bl	USBD_CDC_SetTxBuffer
+ 269              	.LVL23:
+ 303:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 7 */
+ 270              		.loc 1 303 3 is_stmt 1 view .LVU54
+ 303:USB_DEVICE/App/usbd_cdc_if.c ****   /* USER CODE END 7 */
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 12
+
+
+ 271              		.loc 1 303 12 is_stmt 0 view .LVU55
+ 272 001e 2046     		mov	r0, r4
+ 273 0020 FFF7FEFF 		bl	USBD_CDC_TransmitPacket
+ 274              	.LVL24:
+ 305:USB_DEVICE/App/usbd_cdc_if.c **** }
+ 275              		.loc 1 305 3 is_stmt 1 view .LVU56
+ 306:USB_DEVICE/App/usbd_cdc_if.c **** 
+ 276              		.loc 1 306 1 is_stmt 0 view .LVU57
+ 277 0024 10BD     		pop	{r4, pc}
+ 278              	.L23:
+ 279 0026 00BF     		.align	2
+ 280              	.L22:
+ 281 0028 00000000 		.word	hUsbDeviceFS
+ 282              		.cfi_endproc
+ 283              	.LFE142:
+ 285              		.global	USBD_Interface_fops_FS
+ 286              		.section	.data.USBD_Interface_fops_FS,"aw"
+ 287              		.align	2
+ 290              	USBD_Interface_fops_FS:
+ 291 0000 00000000 		.word	CDC_Init_FS
+ 292 0004 00000000 		.word	CDC_DeInit_FS
+ 293 0008 00000000 		.word	CDC_Control_FS
+ 294 000c 00000000 		.word	CDC_Receive_FS
+ 295 0010 00000000 		.word	CDC_TransmitCplt_FS
+ 296              		.global	UserTxBufferFS
+ 297              		.section	.bss.UserTxBufferFS,"aw",%nobits
+ 298              		.align	2
+ 301              	UserTxBufferFS:
+ 302 0000 00000000 		.space	64
+ 302      00000000 
+ 302      00000000 
+ 302      00000000 
+ 302      00000000 
+ 303              		.global	UserRxBufferFS
+ 304              		.section	.bss.UserRxBufferFS,"aw",%nobits
+ 305              		.align	2
+ 308              	UserRxBufferFS:
+ 309 0000 00000000 		.space	64
+ 309      00000000 
+ 309      00000000 
+ 309      00000000 
+ 309      00000000 
+ 310              		.global	cdc_rx_flag
+ 311              		.section	.bss.cdc_rx_flag,"aw",%nobits
+ 314              	cdc_rx_flag:
+ 315 0000 00       		.space	1
+ 316              		.global	cdc_rx_len
+ 317              		.section	.bss.cdc_rx_len,"aw",%nobits
+ 320              	cdc_rx_len:
+ 321 0000 00       		.space	1
+ 322              		.global	cdc_rx_buf
+ 323              		.section	.bss.cdc_rx_buf,"aw",%nobits
+ 324              		.align	2
+ 327              	cdc_rx_buf:
+ 328 0000 00000000 		.space	64
+ 328      00000000 
+ 328      00000000 
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 13
+
+
+ 328      00000000 
+ 328      00000000 
+ 329              		.text
+ 330              	.Letext0:
+ 331              		.file 2 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 332              		.file 3 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 333              		.file 4 "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h"
+ 334              		.file 5 "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h"
+ 335              		.file 6 "USB_DEVICE/App/usbd_cdc_if.h"
+ 336              		.file 7 "C:/Program Files/arm-gnu-toolchain-14.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 337              		.file 8 "<built-in>"
+ARM GAS  C:\Users\AD\AppData\Local\Temp\ccJC15oT.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usbd_cdc_if.c
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:21     .text.CDC_DeInit_FS:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:26     .text.CDC_DeInit_FS:00000000 CDC_DeInit_FS
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:41     .text.CDC_Control_FS:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:46     .text.CDC_Control_FS:00000000 CDC_Control_FS
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:66     .text.CDC_TransmitCplt_FS:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:71     .text.CDC_TransmitCplt_FS:00000000 CDC_TransmitCplt_FS
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:93     .text.CDC_Receive_FS:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:98     .text.CDC_Receive_FS:00000000 CDC_Receive_FS
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:168    .text.CDC_Receive_FS:0000003c $d
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:327    .bss.cdc_rx_buf:00000000 cdc_rx_buf
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:320    .bss.cdc_rx_len:00000000 cdc_rx_len
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:314    .bss.cdc_rx_flag:00000000 cdc_rx_flag
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:177    .text.CDC_Init_FS:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:182    .text.CDC_Init_FS:00000000 CDC_Init_FS
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:212    .text.CDC_Init_FS:0000001c $d
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:301    .bss.UserTxBufferFS:00000000 UserTxBufferFS
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:308    .bss.UserRxBufferFS:00000000 UserRxBufferFS
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:219    .text.CDC_Transmit_FS:00000000 $t
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:225    .text.CDC_Transmit_FS:00000000 CDC_Transmit_FS
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:281    .text.CDC_Transmit_FS:00000028 $d
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:290    .data.USBD_Interface_fops_FS:00000000 USBD_Interface_fops_FS
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:287    .data.USBD_Interface_fops_FS:00000000 $d
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:298    .bss.UserTxBufferFS:00000000 $d
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:305    .bss.UserRxBufferFS:00000000 $d
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:315    .bss.cdc_rx_flag:00000000 $d
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:321    .bss.cdc_rx_len:00000000 $d
+C:\Users\AD\AppData\Local\Temp\ccJC15oT.s:324    .bss.cdc_rx_buf:00000000 $d
+
+UNDEFINED SYMBOLS
+USBD_CDC_SetRxBuffer
+USBD_CDC_ReceivePacket
+memcpy
+hUsbDeviceFS
+USBD_CDC_SetTxBuffer
+USBD_CDC_TransmitPacket
